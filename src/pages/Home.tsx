@@ -1,5 +1,10 @@
-export default function Home(): JSX.Element {
-    return (
+type homeProps = {
+  children?: React.ReactNode | {};
+};
+
+export default function Home({ children }: homeProps): JSX.Element {
+  return (
+    <>
       <div className="bg-cyan-700">
         <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
@@ -9,8 +14,8 @@ export default function Home(): JSX.Element {
               Start using our app today.
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-cyan-200">
-              Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam aliqua proident excepteur
-              commodo do ea.
+              Incididunt sint fugiat pariatur cupidatat consectetur sit cillum
+              anim id veniam aliqua proident excepteur commodo do ea.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
@@ -19,13 +24,17 @@ export default function Home(): JSX.Element {
               >
                 Get started
               </a>
-              <a href="#" className="text-sm font-semibold leading-6 text-white">
+              <a
+                href="#"
+                className="text-sm font-semibold leading-6 text-white"
+              >
                 Learn more <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
         </div>
       </div>
-    )
-  }
-  
+      {children}
+    </>
+  );
+}
