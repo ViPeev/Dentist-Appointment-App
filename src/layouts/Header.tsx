@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import tooth from "../assets/images/tooth.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Header(): JSX.Element {
   return (
@@ -12,7 +12,7 @@ export default function Header(): JSX.Element {
         <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Dentist Appointments</span>
-            <img className="h-8 w-auto" src={tooth} alt="Home" />
+            <img className="h-8 w-auto" src={tooth} alt="Home" title="Home" />
           </a>
         </div>
         <div className="flex flex-1 items-center justify-end gap-x-6">
