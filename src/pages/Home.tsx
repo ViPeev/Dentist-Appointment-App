@@ -1,8 +1,8 @@
-type homeProps = {
+type props = {
   children?: React.ReactNode | {};
 };
 
-export default function Home({ children }: homeProps): JSX.Element {
+export default function Home({ children }: props): JSX.Element {
   return (
     <>
       <div className="bg-cyan-700">
