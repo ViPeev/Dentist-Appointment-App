@@ -4,13 +4,14 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
 import TabPanel from "./layouts/TabPanel";
+import Settings from "./pages/Settings";
 
 const tabs = [
-  { name: "Profile", href: "/profile", current: false },
-  { name: "Dentists", href: "/dentists", current: false },
-  { name: "Appointments", href: "/appointments", current: true },
-  { name: "Medical Record", href: "/medical-record", current: false },
-  { name: "Blacklist", href: "/blacklist", current: false },
+  { name: "Settings", href: "/patient/settings" },
+  { name: "Dentists", href: "/patient/dentists"},
+  { name: "Appointments", href: "/patient/appointments" },
+  { name: "Medical Record", href: "/patient/medical-record" },
+  { name: "Blacklist", href: "/patient/blacklist" },
 ];
 
 export const router = createBrowserRouter([
@@ -44,8 +45,8 @@ export const router = createBrowserRouter([
         Component: () => <TabPanel tabs={tabs} />,
         children: [
           {
-            path: "profile",
-            Component: () => <h2>Profile</h2>,
+            path:"settings",
+            Component: () =>  <Settings />,
           },
           {
             path: "dentists",
@@ -75,11 +76,9 @@ export const router = createBrowserRouter([
         ),
         children: [
           {
-            path: "profile",
+            path: "settings",
             Component: () => (
-              <>
-                <h2>Profile</h2>
-              </>
+              <Settings />
             ),
           },
           {
