@@ -6,10 +6,12 @@ import Layout from "./layouts/Layout";
 import TabPanel from "./layouts/TabPanel";
 import Settings from "./pages/Settings";
 import MedicalRecord from "./pages/MedicalRedord";
+import Appoinments from "./pages/Appointments";
+import DentistList from "./pages/DentistsList";
 
 const tabs = [
   { name: "Settings", href: "/patient/settings" },
-  { name: "Dentists", href: "/patient/dentists"},
+  { name: "Dentists", href: "/patient/dentists" },
   { name: "Appointments", href: "/patient/appointments" },
   { name: "Medical Record", href: "/patient/medical-record" },
   { name: "Blacklist", href: "/patient/blacklist" },
@@ -46,20 +48,20 @@ export const router = createBrowserRouter([
         Component: () => <TabPanel tabs={tabs} />,
         children: [
           {
-            path:"settings",
-            Component: () =>  <Settings />,
+            path: "settings",
+            Component: () => <Settings />,
           },
           {
             path: "dentists",
-            Component: () => <h2>Dentists</h2>,
+            Component: () => <DentistList />,
           },
           {
             path: "appointments",
-            Component: () => <h2>Appointments</h2>,
+            Component: () => <Appoinments />,
           },
           {
             path: "medical-record",
-            Component: () => <MedicalRecord />
+            Component: () => <MedicalRecord />,
           },
           {
             path: "blacklist",
@@ -78,9 +80,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "settings",
-            Component: () => (
-              <Settings />
-            ),
+            Component: () => <Settings />,
           },
           {
             path: "patients",
@@ -92,11 +92,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "appointments",
-            Component: () => (
-              <>
-                <h2>Appointments</h2>
-              </>
-            ),
+            Component: () => <Appoinments />,
           },
           {
             path: "events",
