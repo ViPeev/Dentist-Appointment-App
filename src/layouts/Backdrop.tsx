@@ -1,8 +1,9 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
+import { children } from "../utils/types";
 
-export default function Backdrop({children}:{children:React.ReactNode}) {
+const Backdrop: React.FC<children> = ({ children }) => {
   const navigate = useNavigate();
 
   return (
@@ -40,4 +41,6 @@ export default function Backdrop({children}:{children:React.ReactNode}) {
       </Dialog>
     </Transition.Root>
   );
-}
+};
+
+export default Backdrop;

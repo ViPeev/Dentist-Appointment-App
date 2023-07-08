@@ -1,8 +1,7 @@
-// import { useState } from "react";
 import tooth from "../assets/images/tooth.png";
 import { Link } from "react-router-dom";
 
-export default function Header(): JSX.Element {
+const Header: React.FC = () => {
   return (
     <header className="bg-white">
       <nav
@@ -35,4 +34,6 @@ export default function Header(): JSX.Element {
       </nav>
     </header>
   );
-}
+};
+
+export default Header;

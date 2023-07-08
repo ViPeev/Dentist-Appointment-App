@@ -28,9 +28,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "logout",
-        Component: () => (
-          <h1>Logout</h1>
-        ),
+        Component: () => <h1>Logout</h1>,
       },
       {
         path: "patient",

@@ -2,7 +2,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 
-export default function Layout() {
+const Layout = (): JSX.Element => {
   return (
     <>
       <Header />
@@ -10,4 +10,6 @@ export default function Layout() {
       <Footer />
     </>
   );
-}
+};
+
+export default Layout;

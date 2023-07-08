@@ -2,7 +2,7 @@ type props = {
   children?: React.ReactNode | {};
 };
 
-export default function Home({ children }: props): JSX.Element {
+const Home:React.FC<props>= ({ children }) => {
   return (
     <>
       <div className="bg-cyan-700">
@@ -23,3 +23,5 @@ export default function Home({ children }: props): JSX.Element {
     </>
   );
 }
+
+export default Home;
