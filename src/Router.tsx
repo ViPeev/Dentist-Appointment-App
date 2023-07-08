@@ -8,6 +8,7 @@ import Settings from "./pages/Settings";
 import MedicalRecord from "./pages/MedicalRedord";
 import Appoinments from "./pages/Appointments";
 import DentistList from "./pages/DentistsList";
+import Blacklist from "./pages/Blacklist";
 
 const tabs = [
   { name: "Settings", href: "/patient/settings" },
@@ -65,7 +66,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "blacklist",
-            Component: () => <h2>Blacklist</h2>,
+            Component: () => <Blacklist />,
           },
         ],
       },
