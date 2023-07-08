@@ -3,6 +3,15 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
+import TabPanel from "./layouts/TabPanel";
+
+const tabs = [
+  { name: "Profile", href: "/profile", current: false },
+  { name: "Dentists", href: "/dentists", current: false },
+  { name: "Appointments", href: "/appointments", current: true },
+  { name: "Medical Record", href: "/medical-record", current: false },
+  { name: "Blacklist", href: "/blacklist", current: false },
+];
 
 export const router = createBrowserRouter([
   {
@@ -32,52 +41,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "patient",
-        Component: () => (
-          <>
-            <h1>Patient</h1>
-            <Outlet />
-          </>
-        ),
+        Component: () => <TabPanel tabs={tabs} />,
         children: [
           {
             path: "profile",
-            Component: () => (
-              <>
-                <h2>Profile</h2>
-              </>
-            ),
+            Component: () => <h2>Profile</h2>,
           },
           {
             path: "dentists",
-            Component: () => (
-              <>
-                <h2>Dentists</h2>
-              </>
-            ),
+            Component: () => <h2>Dentists</h2>,
           },
           {
             path: "appointments",
-            Component: () => (
-              <>
-                <h2>Appointments</h2>
-              </>
-            ),
+            Component: () => <h2>Appointments</h2>,
           },
           {
             path: "medical-record",
-            Component: () => (
-              <>
-                <h2>Medical Record</h2>
-              </>
-            ),
+            Component: () => <h2>Medical Record</h2>,
           },
           {
             path: "blacklist",
-            Component: () => (
-              <>
-                <h2>Blacklist</h2>
-              </>
-            ),
+            Component: () => <h2>Blacklist</h2>,
           },
         ],
       },
