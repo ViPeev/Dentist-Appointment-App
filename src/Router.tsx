@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
 import TabPanel from "./layouts/TabPanel";
 import Settings from "./pages/Settings";
+import MedicalRecord from "./pages/MedicalRedord";
 
 const tabs = [
   { name: "Settings", href: "/patient/settings" },
@@ -58,7 +59,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "medical-record",
-            Component: () => <h2>Medical Record</h2>,
+            Component: () => <MedicalRecord />
           },
           {
             path: "blacklist",
