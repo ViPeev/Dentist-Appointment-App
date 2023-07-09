@@ -1,7 +1,10 @@
-import { useState, SyntheticEvent } from "react";
-import Backdrop from "../layouts/Backdrop";
+import { useState, useEffect, SyntheticEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Backdrop from "../layouts/Backdrop";
 import { login } from "../features/authSlice";
+import { authSelector } from "../utils/selectors";
+import { userRoles } from "../utils/roles";
 
 const Login = (): JSX.Element => {
   return (
@@ -10,12 +13,17 @@ const Login = (): JSX.Element => {
     </Backdrop>
   );
 };
-
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth);
-  console.log(userData);
+  const userData = useSelector(authSelector);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData !== null) {
+      navigate(userRoles[userData.role]);
+    }
+  }, [userData]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => {
