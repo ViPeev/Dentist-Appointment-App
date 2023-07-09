@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import { children } from "../utils/types";
+import { childrenType } from "../utils/types";
 
-const Backdrop: React.FC<children> = ({ children }) => {
+const Backdrop: React.FC<childrenType> = ({ children }) => {
   const navigate = useNavigate();
 
   return (

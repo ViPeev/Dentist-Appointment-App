@@ -1,4 +1,7 @@
+import { useState, SyntheticEvent } from "react";
 import Backdrop from "../layouts/Backdrop";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../features/authSlice";
 
 const Login = (): JSX.Element => {
   return (
@@ -9,6 +12,22 @@ const Login = (): JSX.Element => {
 };
 
 const LoginForm: React.FC = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth);
+  console.log(userData);
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  };
+
+  const submitHandler = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
+    e.preventDefault();
+    dispatch(login(formData));
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-3 py-6 lg:px-4">
@@ -19,7 +38,7 @@ const LoginForm: React.FC = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-2">
+          <form className="space-y-2" onSubmit={submitHandler}>
             <div>
               <label
                 htmlFor="email"
@@ -34,6 +53,8 @@ const LoginForm: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
+                  value={formData.email}
+                  onChange={changeHandler}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -54,6 +75,8 @@ const LoginForm: React.FC = () => {
                   type="password"
                   autoComplete="current-password"
                   required
+                  value={formData.password}
+                  onChange={changeHandler}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6"
                 />
               </div>

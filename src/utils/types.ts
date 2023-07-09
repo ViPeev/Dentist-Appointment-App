@@ -12,3 +12,9 @@ export interface fieldType {
   title: string;
   type: string;
 }
+
+export interface roles {
+  1: "admin";
+  2: "dentist";
+  3: "patient";
+}
