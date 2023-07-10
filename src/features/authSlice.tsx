@@ -13,7 +13,7 @@ return response.json();
 })
 
 export const authSlice = createSlice({
-  name: "user",
+  name: "auth",
   initialState,
   extraReducers: {
   [login.pending]:(state) => {
@@ -26,7 +26,5 @@ export const authSlice = createSlice({
     },
   },
 );
-
-export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,10 +1,10 @@
 import { useState, useEffect, SyntheticEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Backdrop from "../layouts/Backdrop";
 import { login } from "../features/authSlice";
 import { authSelector } from "../utils/selectors";
-import { userRoles } from "../utils/roles";
+import { loginRoutes } from "../utils/roles";
+import Backdrop from "../layouts/Backdrop";
 
 const Login = (): JSX.Element => {
   return (
@@ -13,17 +13,18 @@ const Login = (): JSX.Element => {
     </Backdrop>
   );
 };
+
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
-  const userData = useSelector(authSelector);
+  const authData = useSelector(authSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData !== null) {
-      navigate(userRoles[userData.role]);
+    if (authData.userData !== null) {
+      navigate(loginRoutes[authData.userData.role]);
     }
-  }, [userData]);
+  }, [authData.userData]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => {
