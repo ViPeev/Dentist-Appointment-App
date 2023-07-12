@@ -18,3 +18,14 @@ export interface roles {
   2: "dentist";
   3: "patient";
 }
+
+export interface registerRole {
+  id: number;
+  name: string;
+};
+
+export interface selectProps {
+  selectHandler: (value: registerRole) => void;
+  selected: registerRole;
+  values:registerRole[]
+}

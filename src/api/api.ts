@@ -1,8 +1,8 @@
-const deploy = false;
-export const host = deploy ? "" : "http://localhost:5000/api/v1/";
+const deploy:boolean = false;
+export const host:string = deploy ? "" : "http://localhost:5000/api/v1/";
 
 async function request(url, options) {
-  const response = await fetch(`${host}/api${url}`, options);
+  const response = await fetch(`${host}${url}`, options);
 
   const data = await response.json();
   return data;
