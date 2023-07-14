@@ -1,5 +1,7 @@
+import { useSelector } from "react-redux";
 import UpdateDetails from "../components/UpdateDetails";
 import { fieldType } from "../utils/types";
+import { authSelector } from "../utils/selectors";
 
 interface inputFields {
   patient: fieldType[];
@@ -26,6 +28,8 @@ const inputFields: inputFields = {
 };
 
 const Settings: React.FC = () => {
+  const authData = useSelector(authSelector);
+  
   return (
     <>
       <UpdateDetails
