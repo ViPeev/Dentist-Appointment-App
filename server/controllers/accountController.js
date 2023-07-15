@@ -1,6 +1,8 @@
+const config = require("../config");
 const db = require("../utils/db");
+const bcrypt = require("bcrypt");
 
-const updateAccount = async ({ firstName, lastName, email, id }) => {
+const updateDetails = async ({ firstName, lastName, email, image, id }) => {
   const updated = {};
 
   if (firstName) {
@@ -32,6 +34,30 @@ const updateAccount = async ({ firstName, lastName, email, id }) => {
     updated.email = email;
   }
 
+  if (image) {
+    const updateLastNameQuery = "UPDATE accounts SET image=$1 WHERE id=$2";
+    await db.query(updateLastNameQuery, [image, id]);
+
+    updated.image = image;
+  }
+
   return updated;
 };
 
+const updatePassword = async (oldPass, newPass, id) => {
+  const getCurrentPassword = "SELECT pwd FROM accounts WHERE id=$1";
+  const updatePassword = "UPDATE accounts SET pwd=$1 WHERE id=$2";
+
+  const result = await db.query(getCurrentPassword, [id]);
+  const currentPassword = result.rows[0];
+  const isPassCorrect = await bcrypt.compare(oldPass, currentPassword.pwd);
+
+  if (!isPassCorrect) {
+    throw new Error("Current password is incorrect!");
+  }
+
+  const newHashPass = await bcrypt.hash(newPass, config.BCRYPT_ROUNDS);
+  await db.query(updatePassword, [newHashPass, id]);
+};
+
+module.exports = { updateDetails, updatePassword };
