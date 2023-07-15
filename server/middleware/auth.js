@@ -2,7 +2,8 @@ const config = require("../config");
 const jwt = require("../lib/jsonwebtoken");
 
 exports.authentication = () => async (req, res, next) => {
-  const token = req.header("X-Authorization");
+  console.log(req.header);
+  const token = req.header["X-Authorization"];
 
   if (token) {
     try {

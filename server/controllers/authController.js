@@ -40,8 +40,17 @@ const login = async (email, password) => {
     throw new Error("Invalid E-mail or password!");
   }
 
-  const tokenPayload = { id: result.id, role: result.role_id };
-  const token = sign(tokenPayload, config.JWT_SECRET, { expiresIn: "48h" });
+  const payload = {
+    id: result.id,
+    role: result.role_id,
+    firstName: result["first_name"],
+    lastName: result["last_name"],
+    email: result.email,
+    image: null,
+  };
+
+  const token = sign(payload, config.JWT_SECRET, { expiresIn: "48h" });
+  return { accessToken: token, ...payload };
 };
 
 //register
@@ -59,7 +68,9 @@ const register = async (firstName, lastName, email, password, role) => {
 
   const hashPass = await bcrypt.hash(password, config.BCRYPT_ROUNDS);
   await db.query(createQuery, [firstName, lastName, email, hashPass, role]);
-  await inserByRole(email);
+  await insertByRole(email);
 
   return login(email, password);
 };
+
+module.exports = { login, register };
