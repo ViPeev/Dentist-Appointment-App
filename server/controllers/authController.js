@@ -1,9 +1,11 @@
 const db = require("../utils/db");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const config = require("../config");
+const { sign } = require("../utils/jsonwebtoken");
 
-const inserByRole = async (email) => {
+//insert to role db tables
+
+const insertByRole = async (email) => {
   const findQuery = "SELECT id, role_id FROM accounts WHERE email=$1";
 
   const result = await db.query(findQuery, [email]);
@@ -19,24 +21,30 @@ const inserByRole = async (email) => {
   }
 };
 
+//login
+
 const login = async (email, password) => {
-  const findQuery =
-    "SELECT id, email, pwd, role_id, status FROM accounts WHERE email=$1";
+  const findQuery = "SELECT * FROM accounts WHERE email=$1";
   const result = await db.query(findQuery, [email]);
 
   if (result.row.length === 0) {
     throw new Error("Invalid email or password!");
   }
 
-  if(result.status.trim().toLowerCase() !== "active"){
+  if (result.status.trim().toLowerCase() !== "active") {
     throw new Error("Account is suspended!");
   }
 
   const isPassValid = await bcrypt.compare(password, result.pwd);
-  if(!isPassValid){
-    throw new Error("Invalid email or password!");
+  if (!isPassValid) {
+    throw new Error("Invalid E-mail or password!");
   }
+
+  const tokenPayload = { id: result.id, role: result.role_id };
+  const token = sign(tokenPayload, config.JWT_SECRET, { expiresIn: "48h" });
 };
+
+//register
 
 const register = async (firstName, lastName, email, password, role) => {
   const findQuery = "SELECT EMAIL FROM ACCOUNTS WHERE EMAIL=$1";
