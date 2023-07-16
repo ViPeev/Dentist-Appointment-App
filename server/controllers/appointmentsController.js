@@ -45,7 +45,12 @@ const scheduleAppointment = async (id, dentist, date, startTime, endTime) => {
   ]);
 };
 
-const updateAppointmentStatus = async (dentistId, patientId, appointmentId,status) => {
+const updateAppointmentStatus = async (
+  dentistId,
+  patientId,
+  appointmentId,
+  status
+) => {
   const updateStatusQuery =
     "UPDATE appointments SET status=$1 WHERE dentist_id=$2 AND patient_id=$3 AND id=$4";
 
@@ -57,4 +62,69 @@ const updateAppointmentStatus = async (dentistId, patientId, appointmentId,statu
   ]);
 };
 
-module.exports = { scheduleAppointment, updateAppointmentStatus };
+const getPatientAppointments = async (id) => {
+  const getAppointmentDetailsQuery = `
+    SELECT appointments.id, dentist_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email, dentists.phone, dentists.city
+    FROM appointments
+    JOIN dentists ON appointments.dentist_id=dentists.account_id
+    JOIN accounts ON dentists.account_id=accounts.id
+    WHERE patient_id=$1;
+    `;
+
+  const result = await db.query(getAppointmentDetailsQuery, [id]);
+  const appointments = result.rows;
+
+  return { appointments };
+};
+
+const getPatientAppointment = async (appointmentId) => {
+  const getAppointmentDetailsQuery = `
+    SELECT appointments.id, dentist_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email
+    FROM appointments
+    JOIN dentists ON appointments.dentist_id=dentists.account_id
+    JOIN accounts ON dentists.account_id=accounts.id
+    WHERE appointments.id=$1;
+    `;
+
+  const result = await db.query(getAppointmentDetailsQuery, [
+    parseInt(appointmentId),
+  ]);
+  const appointment = result.rows[0];
+
+  return { appointment };
+};
+
+const getDentistAppointment = async (appointmentId) => {
+  const getAppointmentDetailsQuery = `
+    SELECT appointments.id, patient_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email
+    FROM appointments
+    JOIN patients ON appointments.patient_id=patients.account_id
+    JOIN accounts ON patients.account_id=accounts.id
+    WHERE appointments.id=$1;
+      `;
+
+  const result = await db.query(getAppointmentDetailsQuery, [
+    parseInt(appointmentId),
+  ]);
+  const appointment = result.rows[0];
+
+  return { appointment };
+};
+
+const getDentistAppointmentCalendar = async (dentistId) => {
+  const selectAppointments =
+    "SELECT id, appointment_date, start_time, end_time, status FROM appointments WHERE (dentist_id = $1) AND (status=$2 OR status=$3 OR status=$4)";
+
+  const result = await db.query(selectAppointments, [dentistId, "Accepted", "Pending", "Completed"]);
+  const appointments = result.rows;
+
+  return {appointments}
+};
+
+module.exports = {
+  scheduleAppointment,
+  updateAppointmentStatus,
+  getPatientAppointments,
+  getPatientAppointment,
+  getDentistAppointment,
+};
