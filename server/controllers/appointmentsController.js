@@ -1,10 +1,14 @@
 const db = require("../utils/db");
 
-const scheduleAppointment = async (id, dentist, date, start, end) => {
+const scheduleAppointment = async (id, dentist, date, startTime, endTime) => {
   const checkAppointmentQuery =
     "SELECT appointment_date, start_time, status FROM appointments WHERE dentist_id = $1 AND appointment_date=$2 AND start_time=$3";
 
-  const result = await db.query(checkAppointmentQuery, [dentist, date, start]);
+  const result = await db.query(checkAppointmentQuery, [
+    dentist,
+    date,
+    startTime,
+  ]);
   const appointments = result.rows;
   if (appointments.rows.length !== 0) {
     appointments.forEach((appointment) => {
@@ -34,11 +38,24 @@ const scheduleAppointment = async (id, dentist, date, start, end) => {
     dentist,
     id,
     date,
-    start,
-    end,
+    startTime,
+    endTime,
     "Pending",
     title,
   ]);
 };
 
-module.exports = { scheduleAppointment };
+const acceptAppointment = async (dentistId, patientId, appointmentId) => {
+
+  const updateStatusQuery =
+    "UPDATE appointments SET status=$1 WHERE dentist_id=$2 AND (patient_id=$3 AND id=$4)";
+
+  await db.query(updateStatusQuery, [
+    "Accepted",
+    dentistId,
+    parseInt(patientId),
+    parseInt(appointmentId),
+  ]);
+};
+
+module.exports = { scheduleAppointment,acceptAppointment };
