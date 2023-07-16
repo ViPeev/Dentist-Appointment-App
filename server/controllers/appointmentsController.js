@@ -45,17 +45,16 @@ const scheduleAppointment = async (id, dentist, date, startTime, endTime) => {
   ]);
 };
 
-const acceptAppointment = async (dentistId, patientId, appointmentId) => {
-
+const updateAppointmentStatus = async (dentistId, patientId, appointmentId,status) => {
   const updateStatusQuery =
-    "UPDATE appointments SET status=$1 WHERE dentist_id=$2 AND (patient_id=$3 AND id=$4)";
+    "UPDATE appointments SET status=$1 WHERE dentist_id=$2 AND patient_id=$3 AND id=$4";
 
   await db.query(updateStatusQuery, [
-    "Accepted",
+    status,
     dentistId,
     parseInt(patientId),
     parseInt(appointmentId),
   ]);
 };
 
-module.exports = { scheduleAppointment,acceptAppointment };
+module.exports = { scheduleAppointment, updateAppointmentStatus };
