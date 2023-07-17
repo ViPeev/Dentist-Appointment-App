@@ -1,5 +1,6 @@
 const db = require("../utils/db");
 
+//patient requests a new appointment
 const scheduleAppointment = async (id, dentist, date, startTime, endTime) => {
   const checkAppointmentQuery =
     "SELECT appointment_date, start_time, status FROM appointments WHERE dentist_id = $1 AND appointment_date=$2 AND start_time=$3";
@@ -45,6 +46,7 @@ const scheduleAppointment = async (id, dentist, date, startTime, endTime) => {
   ]);
 };
 
+//update status on appointment either from patient or dentist
 const updateAppointmentStatus = async (
   dentistId,
   patientId,
@@ -62,6 +64,7 @@ const updateAppointmentStatus = async (
   ]);
 };
 
+//all appointments for patient view
 const getPatientAppointments = async (id) => {
   const getAppointmentDetailsQuery = `
     SELECT appointments.id, dentist_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email, dentists.phone, dentists.city
@@ -77,6 +80,7 @@ const getPatientAppointments = async (id) => {
   return { appointments };
 };
 
+//single appointment for patient view
 const getPatientAppointment = async (appointmentId) => {
   const getAppointmentDetailsQuery = `
     SELECT appointments.id, dentist_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email
@@ -94,6 +98,7 @@ const getPatientAppointment = async (appointmentId) => {
   return { appointment };
 };
 
+//single appointment for dentist view
 const getDentistAppointment = async (appointmentId) => {
   const getAppointmentDetailsQuery = `
     SELECT appointments.id, patient_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email
@@ -111,14 +116,51 @@ const getDentistAppointment = async (appointmentId) => {
   return { appointment };
 };
 
+//get all appointments for calendar widget
 const getDentistAppointmentCalendar = async (dentistId) => {
   const selectAppointments =
     "SELECT id, appointment_date, start_time, end_time, status FROM appointments WHERE (dentist_id = $1) AND (status=$2 OR status=$3 OR status=$4)";
 
-  const result = await db.query(selectAppointments, [dentistId, "Accepted", "Pending", "Completed"]);
+  const result = await db.query(selectAppointments, [
+    dentistId,
+    "Accepted",
+    "Pending",
+    "Completed",
+  ]);
   const appointments = result.rows;
 
-  return {appointments}
+  return { appointments };
+};
+
+//get pending appointments for dentist
+const getPendingAppointments = async (id) => {
+  const getPendingPatients = `
+    SELECT appointments.id, patient_id, appointment_date, start_time, end_time, appointments.status, accounts.first_name, accounts.last_name, accounts.email
+    FROM appointments
+    JOIN patients ON appointments.patient_id=patients.account_id
+    JOIN accounts ON patients.account_id=accounts.id
+    WHERE dentist_id=$1;
+    `;
+
+  const result = await db.query(getPendingPatients, [id]);
+  const appointments = result.rows;
+  return { appointments };
+};
+
+
+const getCurrentDentistAppointmentCalendar = async (id) => {
+  const selectAppointments =
+    "SELECT id, title, appointment_date, start_time, end_time, status FROM appointments WHERE (dentist_id = $1) AND (status = $2 OR status = $3 OR status = $4)";
+
+  const result = await db.query(selectAppointments, [
+    id,
+    "Accepted",
+    "Pending",
+    "Completed",
+  ]);
+  const appointments = result.rows;
+
+  return { appointments };
 };
 
 module.exports = {
@@ -127,4 +169,7 @@ module.exports = {
   getPatientAppointments,
   getPatientAppointment,
   getDentistAppointment,
+  getDentistAppointmentCalendar,
+  getPendingAppointments,
+  getCurrentDentistAppointmentCalendar
 };
