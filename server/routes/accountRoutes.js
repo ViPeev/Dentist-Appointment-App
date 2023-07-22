@@ -28,7 +28,7 @@ router.put(
         image,
         id,
       });
-      res.json({ ok: true, result, message:"Success"});
+      res.json({ ok: true, result, message: "Success" });
     } catch (error) {
       return res
         .status(500)
