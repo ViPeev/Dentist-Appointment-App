@@ -164,4 +164,24 @@ router.put("/reject/:id", async (req, res) => {
   }
 });
 
+router.put("/accept/:id", async (req, res) => {
+  const dentistId = req.account.id;
+  const appointmentId = parseInt(req.params.id);
+  const { patientId } = req.body;
+
+  try {
+    await updateAppointmentStatus(
+      dentistId,
+      patientId,
+      appointmentId,
+      "Accepted"
+    );
+    res.status(202).json({ ok: true });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ ok: false, message: "Internal server error!" });
+  }
+});
+
 module.exports = router;
