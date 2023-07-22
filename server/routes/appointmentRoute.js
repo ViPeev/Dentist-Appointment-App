@@ -17,7 +17,7 @@ router.get("/history", async (req, res) => {
 
   try {
     const result = await getAppointmentsPatient(patientId);
-    res.json({ ok: true, appointments: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -30,7 +30,7 @@ router.get("/all", async (req, res) => {
 
   try {
     const result = await getPendingAppointmentsDentist(dentistId);
-    res.json({ ok: true, appointments: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -43,7 +43,7 @@ router.get("/dentist/:id", async (req, res) => {
 
   try {
     const result = await getCalendarAppointmentsPatient(dentistId);
-    res.json({ ok: true, appointments: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -56,7 +56,7 @@ router.get("/patient/:id", async (req, res) => {
 
   try {
     const result = await getAppointmentPatient(appointmentId);
-    res.json({ ok: true, appointment: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -69,7 +69,7 @@ router.get("/:id", async (req, res) => {
 
   try {
     const result = await getAppointmentDentist(appointmentId);
-    res.json({ ok: true, appointment: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -82,7 +82,7 @@ router.get("/", async (req, res) => {
 
   try {
     const result = await getCalendarAppointmentDentist(id);
-    res.json({ ok: true, appointments: result });
+    res.json({ ok: true, result });
   } catch (error) {
     return res
       .status(500)
@@ -96,7 +96,7 @@ router.post("/", async (req, res) => {
 
   try {
     await scheduleAppointmentPatient(id, dentist, date, start, end);
-    res.status(201).json({ ok: true });
+    res.status(201).json({ ok: true, message: "Appointment scheduled" });
   } catch (error) {
     return res
       .status(500)
@@ -116,7 +116,7 @@ router.put("/complete/:id", async (req, res) => {
       appointmentId,
       "Completed"
     );
-    res.status(202).json({ ok: true });
+    res.status(202).json({ ok: true, message: "Appointment completed" });
   } catch (error) {
     return res
       .status(500)
@@ -136,7 +136,7 @@ router.put("/cancel/:id", async (req, res) => {
       appointmentId,
       "Cancelled"
     );
-    res.status(202).json({ ok: true });
+    res.status(202).json({ ok: true,  message: "Appointment canceled" });
   } catch (error) {
     return res
       .status(500)
@@ -156,7 +156,7 @@ router.put("/reject/:id", async (req, res) => {
       appointmentId,
       "Cancelled"
     );
-    res.status(202).json({ ok: true });
+    res.status(202).json({ ok: true,  message: "Appointment rejected" });
   } catch (error) {
     return res
       .status(500)
@@ -176,7 +176,7 @@ router.put("/accept/:id", async (req, res) => {
       appointmentId,
       "Accepted"
     );
-    res.status(202).json({ ok: true });
+    res.status(202).json({ ok: true,  message: "Appointment accepted" });
   } catch (error) {
     return res
       .status(500)

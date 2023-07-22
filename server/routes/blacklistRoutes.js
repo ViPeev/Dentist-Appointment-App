@@ -43,7 +43,7 @@ router.post(
 
     try {
       await blacklistDentist(id, dentistId, reason);
-      res.json({ ok: true, result });
+      res.status(201).json({ ok: true, message: "Dentist is blacklisted!" });
     } catch (error) {
       return res
         .status(500)
@@ -64,7 +64,7 @@ router.post(
 
     try {
       await blacklistPatient(id, patientId, reason);
-      res.json({ ok: true, result });
+      res.status(201).json({ ok: true, message: "Patient is blacklisted!" });
     } catch (error) {
       return res
         .status(500)
