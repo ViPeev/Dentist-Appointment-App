@@ -65,12 +65,6 @@ const updateDentistDetails = async (
   { type, city, phone, description },
   dentistId
 ) => {
-  // if (!type && !city && !phone && !description) {
-  //   return {
-  //     status: "error",
-  //     statusmsg: "Bad Request!",
-  //   };
-  // }
 
   if (type) {
     const updateTypeQuery =
