@@ -37,17 +37,4 @@ const getReviews = async (dentistId) => {
   return result.rows;
 };
 
-const getReviewsDentist = async (dentistId) => {
-  const selectReviews = `
-  SELECT dentist_reviews.patient_id, patient_comment, commented_on, accounts.first_name, accounts.last_name 
-  FROM dentist_reviews
-  JOIN patients ON dentist_reviews.patient_id=patients.account_id
-  JOIN accounts ON patients.account_id=accounts.id
-  WHERE dentist_reviews.dentist_id = $1;
-  `;
-
-  const result = await db.query(selectReviews, [dentistId]);
-  return result.rows;
-};
-
-module.exports = { reviewDentist, getReviews, getReviewsDentist };
+module.exports = { reviewDentist, getReviews};
