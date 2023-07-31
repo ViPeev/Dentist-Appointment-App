@@ -4,7 +4,7 @@ const reviewDentist = async (
   { details, dentistId, appointmentId },
   patientId
 ) => {
-  //Check if already reviewd
+  //Check if already reviewed
   const selectReview =
     "SELECT appointment_id FROM dentist_reviews WHERE appointment_id = $1";
 
