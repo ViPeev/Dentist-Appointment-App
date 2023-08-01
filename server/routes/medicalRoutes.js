@@ -1,8 +1,5 @@
 const express = require("express");
-const { check } = require("express-validator");
-const { validation } = require("../utils/validators");
 const router = express.Router();
-
 const {
   createRecord,
   getPatients,

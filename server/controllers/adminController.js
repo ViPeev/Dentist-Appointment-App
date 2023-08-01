@@ -2,6 +2,7 @@ const db = require("../utils/db");
 const bcrypt = require("bcrypt");
 const config = require("../config");
 const roles = require("../utils/roles");
+const { login } = require("./authController");
 
 const getDentistDetails = async (dentistId) => {
   const getDetailsQuery = `
@@ -18,8 +19,7 @@ const getDentistDetails = async (dentistId) => {
   const result = await db.query(getDetailsQuery, [dentistId]);
   return result.rows[0];
 };
-
-async function getDentistReviews(dentistId) {
+const getDentistReviews = async (dentistId) => {
   const getReviewsQuery = `
   SELECT
     accounts.id as patient_id,
@@ -34,7 +34,7 @@ async function getDentistReviews(dentistId) {
 
   const result = await db.query(getReviewsQuery, [dentistId]);
   return result.rows;
-}
+};
 
 const calculateRating = async (accountType, accountId) => {
   const table =
@@ -81,9 +81,11 @@ const register = async (firstName, lastName, email, password) => {
     hashedPassword,
     roleId,
   ]);
+
+  return login(email, password);
 };
 
-const getAllAccounts = async (limit = 1000) => {
+const getAllAccounts = async (limit) => {
   const getAccountsQuery =
     "SELECT id,email,first_name,last_name,created_at,role_id,status,strikes FROM accounts WHERE role_id != 1 ORDER BY created_at DESC LIMIT $1";
 
@@ -172,4 +174,15 @@ const changePassword = async (accountId, adminId, newPassword, oldPassword) => {
   params.push(hashPass);
 
   await db.query(updateQuery, params);
+};
+
+module.exports = {
+  suspendAccount,
+  unsuspendAccount,
+  changePassword,
+  deleteAdmin,
+  getAllAccounts,
+  getAccountData,
+  getAdmins,
+  register,
 };

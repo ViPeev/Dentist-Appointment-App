@@ -1,6 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
-const { validation } = require("../utils/validators");
+const { validation } = require("../middleware/validators");
 const {
   getAll,
   getDentistDetails,

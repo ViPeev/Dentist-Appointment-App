@@ -1,14 +1,14 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { validation } = require("../utils/validators");
-
-const router = express.Router();
+const { validation } = require("../middleware/validators");
 const {
   getBlacklistedDentists,
   getBlacklistedPatients,
   blacklistDentist,
   blacklistPatient,
 } = require("../controllers/blacklistController.js");
+
+const router = express.Router();
 
 router.get("/patients", async (req, res) => {
   try {

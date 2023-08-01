@@ -1,6 +1,4 @@
 const express = require("express");
-const router = express.Router();
-
 const {
   getAppointmentsPatient,
   getPendingAppointmentsDentist,
@@ -11,6 +9,8 @@ const {
   scheduleAppointmentPatient,
   updateAppointmentStatus,
 } = require("../controllers/appointmentController");
+
+const router = express.Router();
 
 router.get("/history", async (req, res) => {
   const patientId = req.account.id;

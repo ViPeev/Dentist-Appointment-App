@@ -4,7 +4,7 @@ const {
   updateDetails,
   updatePassword,
 } = require("../controllers/accountController");
-const { validation } = require("../utils/validators");
+const { validation } = require("../middleware/validators");
 
 const router = express.Router();
 
