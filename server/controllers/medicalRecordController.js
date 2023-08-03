@@ -33,7 +33,7 @@ const getPatients = async (dentistId) => {
   // Remove blacklisted patients
   for (const patient of patientList) {
     const queryResult = await db.query(
-      "select id from blacklisted_patients where patient_id=$1 and dentist_id=$2",
+      "SELECT id FROM blacklisted_patients WHERE patient_id=$1 AND dentist_id=$2",
       [patient.patient_id, dentistId]
     );
     if (queryResult.rows.length === 0) {

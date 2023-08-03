@@ -19,10 +19,11 @@ const getDentistDetails = async (dentistId) => {
   const result = await db.query(getDetailsQuery, [dentistId]);
   return result.rows[0];
 };
+
 const getDentistReviews = async (dentistId) => {
   const getReviewsQuery = `
   SELECT
-    accounts.id as patient_id,
+    accounts.id AS patient_id,
     first_name,
     last_name,
     patient_comment,
@@ -41,8 +42,8 @@ const calculateRating = async (accountType, accountId) => {
     accountType === roles.DENTIST ? "dentist_ratings" : "patient_ratings";
   const calcQuery = `SELECT AVG(rating)::numeric(10,1) AS account_rating FROM ${table} WHERE dentist_id=$1`;
 
-  const res = await db.query(calcQuery, [accountId]);
-  return res.rows[0]["account_rating"] || 0;
+  const result = await db.query(calcQuery, [accountId]);
+  return result.rows[0]["account_rating"] || 0;
 };
 
 const compareAdminOldPassword = async (oldPassword, accountId) => {
@@ -69,7 +70,7 @@ const register = async (firstName, lastName, email, password) => {
   const findAccountResult = await db.query(findQuery, findValues);
 
   if (findAccountResult.rows.length !== 0) {
-    throw new Error("Admin is already registered");
+    throw new Error("Admin is already registered!");
   }
 
   const createQuery =
@@ -89,8 +90,8 @@ const getAllAccounts = async (limit) => {
   const getAccountsQuery =
     "SELECT id,email,first_name,last_name,created_at,role_id,status,strikes FROM accounts WHERE role_id != 1 ORDER BY created_at DESC LIMIT $1";
 
-  const accounts = await db.query(getAccountsQuery, [limit]);
-  return accounts.rows;
+  const result = await db.query(getAccountsQuery, [limit]);
+  return result.rows;
 };
 
 const getAccountData = async (accountId) => {
@@ -135,9 +136,9 @@ const unsuspendAccount = async (accountId) => {
   const findAccQuery = "SELECT id FROM accounts WHERE id=$1";
 
   // Check if account with given id exists
-  const accountResult = await db.query(findAccQuery, [accountId]);
+  const result = await db.query(findAccQuery, [accountId]);
 
-  if (accountResult.rows.length === 0) {
+  if (result.rows.length === 0) {
     throw new Error("No account found with the given id!");
   }
 

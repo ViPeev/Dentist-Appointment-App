@@ -2,19 +2,19 @@ const db = require("../utils/db");
 
 const suspendAccount = (accountId) => {
   const suspendAccountQuery =
-    "update accounts set status='Suspended' where id=$1 returning strikes";
+    "UPDATE accounts SET status='Suspended' WHERE id=$1 RETURNING strikes";
 
   return db.query(suspendAccountQuery, [accountId]);
 };
 
 const updateAccountStrikes = async (accountId) => {
   const updateQuery =
-    "update accounts set strikes = strikes + 1 where id=$1 returning strikes";
+    "UPDATE accounts SET strikes = strikes + 1 WHERE id=$1 RETURNING strikes";
 
   const result = await db.query(updateQuery, [accountId]);
 
   if (result.rowCount === 0) {
-    throw new Error(`Account not found for account id - ${accountId}`);
+    throw new Error(`Account not found for account id - ${accountId}!`);
   }
 
   return result.rows[0]["strikes"];
@@ -34,12 +34,12 @@ const addAccountToBlacklist = async (
 
   const table = `blacklisted_${blacklistTable}`;
   const existingRecords = await db.query(
-    `select id from ${table} where dentist_id=$1 and patient_id=$2`,
+    `SELECT id FROM ${table} WHERE dentist_id=$1 AND patient_id=$2`,
     [dentistId, patientId]
   );
 
   if (existingRecords.rows.length === 0) {
-    const insertQuery = `insert into ${table} (dentist_id, patient_id, reason) values($1,$2,$3)`;
+    const insertQuery = `INSERT INTO ${table} (dentist_id, patient_id, reason) VALUES($1,$2,$3)`;
     await db.query(insertQuery, [dentistId, patientId, reason]);
   }
 };
@@ -68,7 +68,7 @@ const blacklistDentist = async (accountId, dentistId, reason) => {
 
 const getBlacklistedPatients = async () => {
   const query =
-    "select * from blacklisted_patients order by patient_id,created_at desc";
+    "SELECT * FROM blacklisted_patients ORDER BY patient_id,created_at DESC";
   const result = await db.query(query);
 
   return result.rows;
@@ -76,7 +76,7 @@ const getBlacklistedPatients = async () => {
 
 const getBlacklistedDentists = async () => {
   const query =
-    "select * from blacklisted_dentists order by dentist_id,created_at desc";
+    "SELECT * FROM blacklisted_dentists ORDER BY dentist_id,created_at DESC";
 
   const result = await db.query(query);
   return result.rows;

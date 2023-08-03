@@ -17,7 +17,7 @@ const scheduleAppointmentPatient = async (
     startTime,
   ]);
   const appointments = result.rows;
-  if (appointments.rows.length !== 0) {
+  if (appointments.length !== 0) {
     appointments.forEach((appointment) => {
       if (
         appointment.status === "Pending" ||

@@ -6,12 +6,12 @@ const getBlacklist = async (accountId, term) => {
 
   if (term) {
     searchQuery =
-      " and first_name ilike $2 or last_name ilike $2 or email ilike $2";
+      " AND first_name ilike $2 OR last_name ilike $2 OR email ilike $2";
     searchParams.push(`%${term}%`);
   }
 
   const getBlacklistQuery = `
-    select 
+    SELECT
       dentist_id,
       patient_id,
       reason,
@@ -22,12 +22,12 @@ const getBlacklist = async (accountId, term) => {
       status,
       city,
       dentist_type
-    from blacklisted_dentists
-    left join accounts
-    on dentist_id=accounts.id
-    left join dentists
-    on account_id=dentist_id
-    where
+    FROM blacklisted_dentists
+    LEFT JOIN accounts
+    ON dentist_id=accounts.id
+    LEFT JOIN dentists
+    ON account_id=dentist_id
+    WHERE
       blacklisted_dentists.patient_id=$1
     ${searchQuery}
   `;
@@ -38,7 +38,7 @@ const getBlacklist = async (accountId, term) => {
 
 const removeFromBlacklist = async (accountId, dentistId) => {
   const deleteQuery =
-    "delete from blacklisted_dentists where dentist_id = $1 and patient_id = $2";
+    "DELETE FROM blacklisted_dentists WHERE dentist_id = $1 AND patient_id = $2";
   await db.query(deleteQuery, [dentistId, accountId]);
 };
 

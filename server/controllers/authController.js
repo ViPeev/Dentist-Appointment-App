@@ -22,7 +22,6 @@ const insertByRole = async (email) => {
 };
 
 //login
-
 const login = async (email, password) => {
   const findQuery = "SELECT * FROM accounts WHERE email=$1";
   const result = await db.query(findQuery, [email]);

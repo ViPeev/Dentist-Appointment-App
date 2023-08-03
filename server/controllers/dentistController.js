@@ -5,14 +5,14 @@ const roles = require("../utils/roles");
 const getAll = async (accountId, term) => {
   const dentists = [];
   let searchQuery =
-    "select id,first_name,last_name,email,description,city,dentist_type,phone from accounts join dentists on dentists.account_id=accounts.id where role_id=$1";
+    "SELECT id,first_name,last_name,email,description,city,dentist_type,phone FROM accounts JOIN dentists ON dentists.account_id=accounts.id WHERE role_id=$1";
   const calculateRatingQuery =
-    "select AVG(rating)::numeric(10,1) as dentist_rating from dentist_ratings where dentist_id=$1";
+    "SELECT AVG(rating)::numeric(10,1) AS dentist_rating FROM dentist_ratings WHERE dentist_id=$1";
   let searchParams = [roles.DENTIST];
 
   if (term && term.length !== 0) {
     searchQuery +=
-      " and (first_name ilike $2 or last_name ilike $2 or email ilike $2)";
+      " AND (first_name ilike $2 OR last_name ilike $2 OR email ilike $2)";
     searchParams.push(`%${term}%`);
   }
 
@@ -32,7 +32,7 @@ const getAll = async (accountId, term) => {
 
   for (const dentist of dentists) {
     const result = await db.query(
-      "select id from blacklisted_dentists where dentist_id=$1 and patient_id=$2",
+      "SELECT id FROM blacklisted_dentists WHERE dentist_id=$1 AND patient_id=$2",
       [dentist.id, accountId]
     );
 
@@ -45,7 +45,7 @@ const getAll = async (accountId, term) => {
 };
 
 const getDentistDetails = async (accountId) => {
-  const result = await db.query("select * from dentists where account_id=$1", [
+  const result = await db.query("SELECT * FROM dentists WHERE account_id=$1", [
     accountId,
   ]);
 
@@ -100,19 +100,19 @@ const updateWorkDetails = async (days, start, end, dentistId) => {
 
 const getBlacklist = async (dentistId) => {
   const getBlacklistQuery = `
-    select 
+    SELECT 
       dentist_id,
       patient_id,
       reason,
-      blacklisted_patients.created_at as blacklist_date,
+      blacklisted_patients.created_at AS blacklist_date,
       email,
       first_name,
       last_name,
       status
-    from blacklisted_patients
-    left join accounts
-    on patient_id=accounts.id
-    where
+    FROM blacklisted_patients
+    LEFT JOIN accounts
+    ON patient_id=accounts.id
+    WHERE
       blacklisted_patients.dentist_id=$1
   `;
 
@@ -122,7 +122,7 @@ const getBlacklist = async (dentistId) => {
 
 const removeFromBlacklist = async (dentistId, patientId) => {
   const removeQuery =
-    "delete from blacklisted_patients where patient_id = $1 and dentist_id = $2";
+    "DELETE FROM blacklisted_patients WHERE patient_id = $1 AND dentist_id = $2";
   await db.query(removeQuery, [patientId, dentistId]);
 };
 
