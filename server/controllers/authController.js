@@ -2,6 +2,7 @@ const db = require("../utils/db");
 const bcrypt = require("bcrypt");
 const config = require("../config");
 const { sign } = require("../utils/jsonwebtoken");
+const { ValidationError } = require("../utils/customError");
 
 //insert to role db tables
 
@@ -27,16 +28,16 @@ const login = async (email, password) => {
   const result = await db.query(findQuery, [email]);
 
   if (result.row.length === 0) {
-    throw new Error("Invalid email or password!");
+    throw new ValidationError("Invalid email or password! - 400");
   }
 
   if (result.status.trim().toLowerCase() !== "active") {
-    throw new Error("Account is suspended!");
+    throw new ValidationError("Account is suspended! - 403");
   }
 
   const isPassValid = await bcrypt.compare(password, result.pwd);
   if (!isPassValid) {
-    throw new Error("Invalid E-mail or password!");
+    throw new ValidationError("Invalid E-mail or password! - 400");
   }
 
   const payload = {
@@ -62,7 +63,7 @@ const register = async (firstName, lastName, email, password, role) => {
   const result = await db.query(findQuery, [email]);
 
   if (result.row.length !== 0) {
-    throw new Error("E-mail is already taken!");
+    throw new ValidationError("E-mail is already taken! - 400");
   }
 
   const hashPass = await bcrypt.hash(password, config.BCRYPT_ROUNDS);

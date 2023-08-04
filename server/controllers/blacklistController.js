@@ -1,3 +1,4 @@
+const { ValidationError } = require("../utils/customError");
 const db = require("../utils/db");
 
 const suspendAccount = (accountId) => {
@@ -14,7 +15,7 @@ const updateAccountStrikes = async (accountId) => {
   const result = await db.query(updateQuery, [accountId]);
 
   if (result.rowCount === 0) {
-    throw new Error(`Account not found for account id - ${accountId}!`);
+    throw new ValidationError("No account found with the given id! - 404");
   }
 
   return result.rows[0]["strikes"];
@@ -29,7 +30,7 @@ const addAccountToBlacklist = async (
   const allowedTables = ["dentists", "patients"];
 
   if (!allowedTables.includes(blacklistTable)) {
-    throw new Error(`Invalid blacklist table - '${blacklistTable}'.`);
+    throw new ValidationError(`Invalid blacklist table - '${blacklistTable}'.`);
   }
 
   const table = `blacklisted_${blacklistTable}`;

@@ -1,3 +1,4 @@
+const { ValidationError } = require("../utils/customError");
 const db = require("../utils/db");
 
 const ratePatient = async (patientId, patientRating, dentistId) => {
@@ -18,7 +19,7 @@ const rateDentist = async (
   const findRating = await db.query(selectRating, [appointmentId]);
 
   if (findRating.rows.length !== 0) {
-    throw new Error("Dentist has already been rated!");
+    throw new ValidationError("Dentist has already been rated! - 403");
   }
 
   const createDentistRating =

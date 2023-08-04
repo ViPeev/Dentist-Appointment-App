@@ -1,4 +1,5 @@
 const db = require("../utils/db");
+const { ValidationError } = require("../utils/customError");
 
 //patient requests a new appointment /7
 const scheduleAppointmentPatient = async (
@@ -24,7 +25,9 @@ const scheduleAppointmentPatient = async (
         appointment.status === "Accepted" ||
         appointment.status === "Completed"
       ) {
-        throw new Error("Dentist is not available during this period!");
+        throw new ValidationError(
+          "Dentist is not available during this period! - 400"
+        );
       }
     });
   }
@@ -81,7 +84,7 @@ const getAppointmentsPatient = async (patientId) => {
     `;
 
   const result = await db.query(getAppointmentDetailsQuery, [patientId]);
-  
+
   return result.rows;
 };
 

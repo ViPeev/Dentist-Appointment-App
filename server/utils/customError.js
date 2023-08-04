@@ -10,8 +10,7 @@ const rejectResponse = (res, error) => {
   let message = "Internal server error!";
 
   if (error instanceof ValidationError) {
-    code = 400;
-    message = error.message;
+    [message, code] = error.message.split(" - ");
   }
 
   return res.status(code).json({ ok: false, message });

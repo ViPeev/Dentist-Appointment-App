@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const config = require("../config");
 const roles = require("../utils/roles");
 const { login } = require("./authController");
+const { ValidationError } = require("../utils/customError");
 
 const getDentistDetails = async (dentistId) => {
   const getDetailsQuery = `
@@ -70,7 +71,7 @@ const register = async (firstName, lastName, email, password) => {
   const findAccountResult = await db.query(findQuery, findValues);
 
   if (findAccountResult.rows.length !== 0) {
-    throw new Error("Admin is already registered!");
+    throw new ValidationError("E-mail is already taken! - 400");
   }
 
   const createQuery =
@@ -101,7 +102,7 @@ const getAccountData = async (accountId) => {
   const result = await db.query(getAccountQuery, [accountId]);
 
   if (result.rows.length === 0) {
-    throw new Error("Invalid account id!");
+    throw new ValidationError("No account found with the given id! - 404");
   }
 
   const account = result.rows[0];
@@ -118,32 +119,18 @@ const getAccountData = async (accountId) => {
   return account;
 };
 
-const suspendAccount = async (accountId) => {
-  const findAccQuery = "SELECT id FROM accounts WHERE id=$1";
-
-  // Check if account with given id exists
-  const accountResult = await db.query(findAccQuery, [accountId]);
-
-  if (accountResult.rows.length === 0) {
-    throw new Error("No account found with the given id!");
-  }
-
-  const suspendQuery = "UPDATE accounts SET status='Suspended' WHERE id=$1";
-  await db.query(suspendQuery, [accountId]);
-};
-
-const unsuspendAccount = async (accountId) => {
+const toggleSuspend = async (accountId, state) => {
   const findAccQuery = "SELECT id FROM accounts WHERE id=$1";
 
   // Check if account with given id exists
   const result = await db.query(findAccQuery, [accountId]);
 
   if (result.rows.length === 0) {
-    throw new Error("No account found with the given id!");
+    throw new ValidationError("No account found with the given id! - 404");
   }
 
-  const unsuspendQuery = "UPDATE accounts SET status='Active' WHERE id=$1";
-  await db.query(unsuspendQuery, [accountId]);
+  const updateSuspendState = `UPDATE accounts SET status='${state}' WHERE id=$1`;
+  await db.query(updateSuspendState, [accountId]);
 };
 
 const deleteAdmin = async (adminId) => {
@@ -162,7 +149,7 @@ const changePassword = async (accountId, adminId, newPassword, oldPassword) => {
     );
 
     if (!passwordsMatch) {
-      throw new Error("Incorrect old password!");
+      throw new ValidationError("Current password is incorrect! - 401");
     }
 
     params.push(accountId);
@@ -178,8 +165,7 @@ const changePassword = async (accountId, adminId, newPassword, oldPassword) => {
 };
 
 module.exports = {
-  suspendAccount,
-  unsuspendAccount,
+  toggleSuspend,
   changePassword,
   deleteAdmin,
   getAllAccounts,

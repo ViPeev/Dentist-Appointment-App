@@ -2,8 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 const { validation } = require("../middleware/validators");
 const {
-  suspendAccount,
-  unsuspendAccount,
+  toggleSuspend,
   changePassword,
   deleteAdmin,
   getAllAccounts,
@@ -119,7 +118,7 @@ router.post(
     const { accountId } = req.body;
 
     try {
-      await suspendAccount(accountId);
+      await toggleSuspend(accountId, "Suspended");
       return res.json({ ok: true, message: "Account successfully suspended!" });
     } catch (error) {
       return res
@@ -138,7 +137,7 @@ router.post(
     const { accountId } = req.body;
 
     try {
-      await unsuspendAccount(accountId);
+      await toggleSuspend(accountId, "Active");
       return res.json({
         ok: true,
         message: "Account successfully unsuspended!",

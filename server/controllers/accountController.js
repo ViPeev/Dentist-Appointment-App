@@ -1,4 +1,5 @@
 const config = require("../config");
+const { ValidationError } = require("../utils/customError");
 const db = require("../utils/db");
 const bcrypt = require("bcrypt");
 
@@ -27,7 +28,7 @@ const updateDetails = async ({ firstName, lastName, email, image, id }) => {
     const isEmailTaken = await db.query(isEmailTakenQuery, [email]);
 
     if (isEmailTaken.rows.length !== 0) {
-      throw new Error("E-mail is already taken!");
+      throw new ValidationError("E-mail is already taken! - 400");
     }
 
     await db.query(changeEmailQuery, [email, id]);
@@ -53,7 +54,7 @@ const updatePassword = async (oldPass, newPass, id) => {
   const isPassCorrect = await bcrypt.compare(oldPass, currentPassword.pwd);
 
   if (!isPassCorrect) {
-    throw new Error("Current password is incorrect!");
+    throw new ValidationError("Current password is incorrect! - 401");
   }
 
   const newHashPass = await bcrypt.hash(newPass, config.BCRYPT_ROUNDS);
