@@ -21,9 +21,7 @@ router.get("/", async (req, res) => {
     const result = await getAdmins(accountId);
     res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -39,9 +37,7 @@ router.post("/", async (req, res) => {
     const result = await register(firstName, lastName, email, password);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -58,9 +54,7 @@ router.patch("/", async (req, res) => {
       .status(202)
       .json({ ok: true, message: "Password changed successfully!" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -75,9 +69,7 @@ router.delete("/:adminId", async (req, res) => {
       message: "Administrator account has been deleted successfully!",
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -89,9 +81,7 @@ router.get("/accounts/:limit?", async (req, res) => {
     const result = await getAllAccounts(limit);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -103,9 +93,7 @@ router.get("/account/:accountId", async (req, res) => {
     const result = await getAccountData(accountId);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -121,9 +109,7 @@ router.post(
       await toggleSuspend(accountId, "Suspended");
       return res.json({ ok: true, message: "Account successfully suspended!" });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );
@@ -143,9 +129,7 @@ router.post(
         message: "Account successfully unsuspended!",
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );

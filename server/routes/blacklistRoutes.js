@@ -15,9 +15,7 @@ router.get("/patients", async (req, res) => {
     const result = await getBlacklistedPatients();
     res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -26,9 +24,7 @@ router.get("/dentists", async (req, res) => {
     const result = await getBlacklistedDentists();
     res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -45,9 +41,7 @@ router.post(
       await blacklistDentist(id, dentistId, reason);
       res.status(201).json({ ok: true, message: "Dentist is blacklisted!" });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );
@@ -66,9 +60,7 @@ router.post(
       await blacklistPatient(id, patientId, reason);
       res.status(201).json({ ok: true, message: "Patient is blacklisted!" });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );

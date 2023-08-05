@@ -13,10 +13,7 @@ router.get("/:id", async (req, res) => {
     const result = await getReviews(dentistId);
     res.json({ ok: true, result });
   } catch (error) {
-    return res.status(500).send({
-      ok:false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 
@@ -28,10 +25,7 @@ router.get("/", async (req, res) => {
     const result = await getReviews(dentistId);
     res.json({ ok: true, result });
   } catch (error) {
-    return res.status(500).send({
-      ok: false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 
@@ -47,10 +41,7 @@ router.post("/", async (req, res) => {
       message: "Review created successfully",
     });
   } catch (error) {
-    return res.status(500).send({
-      ok:false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 

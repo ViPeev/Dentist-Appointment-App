@@ -5,6 +5,7 @@ const {
   updatePassword,
 } = require("../controllers/accountController");
 const { validation } = require("../middleware/validators");
+const { rejectResponse } = require("../utils/customError");
 
 const router = express.Router();
 
@@ -30,9 +31,7 @@ router.put(
       });
       res.json({ ok: true, result, message: "Success" });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );
@@ -52,9 +51,7 @@ router.put(
       await updatePassword(oldPass, newPass, id);
       res.json({ ok: true, message: "Success" });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );

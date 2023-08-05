@@ -5,7 +5,7 @@ const { register, login } = require("../controllers/authController");
 
 const router = express.Router();
 
-//POST: /auth - Register new user
+//post /auth - Register new user
 router.post(
   "/",
   body("firstName").isAlpha(),
@@ -23,14 +23,12 @@ router.post(
       const result = await register(firstName, lastName, email, password, role);
       res.json({ ok: true, userData: result });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );
 
-//POST: /auth/login - User login
+//post /auth/login - User login
 
 router.post(
   "/login",
@@ -43,9 +41,7 @@ router.post(
       const result = await login(email, password);
       res.json({ ok: true, userData: result });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );

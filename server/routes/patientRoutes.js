@@ -14,9 +14,7 @@ router.get("/blacklist", async (req, res) => {
     const result = await getBlacklist(accountId, term);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -31,9 +29,7 @@ router.delete("/blacklist/:dentistId", async (req, res) => {
       .status(202)
       .json({ ok: true, message: "Success" });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 

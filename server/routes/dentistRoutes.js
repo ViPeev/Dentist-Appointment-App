@@ -21,9 +21,7 @@ router.get("/", async (req, res) => {
     const result = await getAll(accoundId, term);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -34,9 +32,7 @@ router.get("/details/", async (req, res) => {
     const result = await getDentistDetails(accoundId);
     return res.json({ ok: true, result });
   } catch {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -47,9 +43,7 @@ router.get("/details/:id", async (req, res) => {
     const result = await getSelectedDentistFullDetails(dentistId);
     return res.json({ ok: true, result });
   } catch {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -74,9 +68,7 @@ router.put(
       await updateDentistDetails({ type, city, phone, description }, accountId);
       res.status(202).json({ ok: true, message: "Details updated" });
     } catch (error) {
-      return res
-        .status(500)
-        .send({ ok: false, message: "Internal server error!" });
+      return rejectResponse(res, error);
     }
   }
 );
@@ -90,9 +82,7 @@ router.put("/schedule", async (req, res) => {
     const result = await updateWorkDetails(days, start, end, dentistId);
     return res.json({ ok: true, result });
   } catch {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -104,9 +94,7 @@ router.get("/blacklist", async (req, res) => {
     const result = await getBlacklist(dentistId);
     return res.json({ ok: true, result });
   } catch {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -119,9 +107,7 @@ router.delete("/blacklist/:id", async (req, res) => {
     await removeFromBlacklist(dentistId, patientId);
     return res.json({ ok: true, message: "Patient removed from blacklist" });
   } catch {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 

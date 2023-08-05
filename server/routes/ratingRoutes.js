@@ -17,10 +17,7 @@ router.get("/patient/", async (req, res) => {
       result,
     });
   } catch (error) {
-    return res.status(500).send({
-      ok: false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 
@@ -34,10 +31,7 @@ router.get("/dentist/", async (req, res) => {
       result,
     });
   } catch (error) {
-    return res.status(500).send({
-      ok: false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 
@@ -52,10 +46,7 @@ router.post("/patient", async (req, res) => {
       message: "Patient rated successfully!",
     });
   } catch (error) {
-    return res.status(500).send({
-      ok: false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 
@@ -70,10 +61,7 @@ router.post("/dentist", async (req, res) => {
       message: "Dentist rated successfully!",
     });
   } catch (error) {
-    return res.status(500).send({
-      ok: false,
-      message: "Internal server error!",
-    });
+    return rejectResponse(res, error);
   }
 });
 

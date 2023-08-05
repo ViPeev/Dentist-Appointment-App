@@ -16,9 +16,7 @@ router.get("/dentists", async (req, res) => {
     const result = await getDentists(patientId);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -30,9 +28,7 @@ router.get("/dentists/:id", async (req, res) => {
     const result = await getPatientMedicalRecordByDentist(patientId, dentistId);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -44,9 +40,7 @@ router.get("/:id", async (req, res) => {
     const result = await getPatientMedicalRecord(dentistId, patientId);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -57,9 +51,7 @@ router.get("/", async (req, res) => {
     const result = await getPatients(dentistId);
     return res.json({ ok: true, result });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
@@ -74,9 +66,7 @@ router.post("/", async (req, res) => {
       .status(201)
       .json({ ok: true, message: "Medical record created successfully." });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ ok: false, message: "Internal server error!" });
+    return rejectResponse(res, error);
   }
 });
 
