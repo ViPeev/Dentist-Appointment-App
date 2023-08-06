@@ -56,9 +56,9 @@ const login = async (email, password) => {
 //register
 
 const register = async (firstName, lastName, email, password, role) => {
-  const findQuery = "SELECT EMAIL FROM ACCOUNTS WHERE EMAIL=$1";
+  const findQuery = "SELECt email FROM accounts WHERE email=$1";
   const createQuery =
-    "INSERT INTO ACCOUNTS(first_name, last_name, email, pwd, role_id) VALUES($1, $2, $3, $4, $5)";
+    "INSERT INTO accounts(first_name, last_name, email, pwd, role_id) VALUES($1, $2, $3, $4, $5)";
 
   const result = await db.query(findQuery, [email]);
 
@@ -67,6 +67,7 @@ const register = async (firstName, lastName, email, password, role) => {
   }
 
   const hashPass = await bcrypt.hash(password, config.BCRYPT_ROUNDS);
+  
   await db.query(createQuery, [firstName, lastName, email, hashPass, role]);
   await insertByRole(email);
 

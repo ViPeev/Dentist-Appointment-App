@@ -4,9 +4,10 @@ const {
   getBlacklist,
   removeFromBlacklist,
 } = require("../controllers/patientController");
+const { authAs } = require("../middleware/guards");
 
 //Get all blacklisted dentsits for a patient
-router.get("/blacklist", async (req, res) => {
+router.get("/blacklist", authAs("PATIENT"), async (req, res) => {
   const accountId = req.account.id;
   const { term } = req.query;
 
@@ -19,15 +20,13 @@ router.get("/blacklist", async (req, res) => {
 });
 
 //Remove dentist from patient's blacklist
-router.delete("/blacklist/:dentistId", async (req, res) => {
+router.delete("/blacklist/:dentistId", authAs("PATIENT"), async (req, res) => {
   const accountId = req.account.id;
   const dentistId = req.params.dentistId;
 
   try {
     await removeFromBlacklist(accountId, dentistId);
-    return res
-      .status(202)
-      .json({ ok: true, message: "Success" });
+    return res.status(202).json({ ok: true, message: "Success" });
   } catch (error) {
     return rejectResponse(res, error);
   }

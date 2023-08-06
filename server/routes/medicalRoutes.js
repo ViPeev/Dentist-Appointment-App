@@ -7,9 +7,10 @@ const {
   getPatientMedicalRecord,
   getPatientMedicalRecordByDentist,
 } = require("../controllers/medicalRecordController");
+const { authAs } = require("../middleware/guards");
 
 //get dentists by patient
-router.get("/dentists", async (req, res) => {
+router.get("/dentists", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
 
   try {
@@ -20,7 +21,7 @@ router.get("/dentists", async (req, res) => {
   }
 });
 
-router.get("/dentists/:id", async (req, res) => {
+router.get("/dentists/:id", authAs("PATIENT"), async (req, res) => {
   const dentistId = req.params.id;
   const patientId = req.account.id;
 
@@ -32,7 +33,7 @@ router.get("/dentists/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authAs("DENTIST"), async (req, res) => {
   const patientId = Number(req.params.id);
   const dentistId = req.account.id;
 
@@ -44,7 +45,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
   try {
@@ -55,13 +56,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authAs("DENTIST"), async (req, res) => {
   const { details, patientId, appointmentId } = req.body;
   const dentistId = req.account.id;
 
   try {
     await createRecord({ details, patientId, appointmentId }, dentistId);
-    
+
     return res
       .status(201)
       .json({ ok: true, message: "Medical record created successfully." });

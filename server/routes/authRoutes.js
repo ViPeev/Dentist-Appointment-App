@@ -2,12 +2,14 @@ const express = require("express");
 const { body } = require("express-validator");
 const { validation } = require("../middleware/validators");
 const { register, login } = require("../controllers/authController");
+const { isAuthenticated, isNotAuthenticated } = require("../middleware/guards");
 
 const router = express.Router();
 
 //post /auth - Register new user
 router.post(
   "/",
+  isNotAuthenticated,
   body("firstName").isAlpha(),
   body("lastName").isAlpha(),
   body("email").isEmail(),
@@ -32,6 +34,7 @@ router.post(
 
 router.post(
   "/login",
+  isNotAuthenticated,
   body("email").isEmail(),
   validation(),
   async (req, res) => {
@@ -46,8 +49,8 @@ router.post(
   }
 );
 
-//GET: /auth/login - User login
-router.get("/logout", (req, res) => {
+//GET: /auth/logout - User logout
+router.get("/logout", isAuthenticated, (req, res) => {
   res.json({ ok: true });
 });
 

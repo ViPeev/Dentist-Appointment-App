@@ -24,4 +24,16 @@ const isAuthenticated = (req, res, next) => {
   next();
 };
 
-module.exports = { isAuthenticated, authAs };
+const isNotAuthenticated = (req, res, next) => {
+  const account = req.account;
+
+  if (account) {
+    return res
+      .status(400)
+      .json({ ok: false, message: "Already authenticated! Please log-out." });
+  }
+
+  next();
+};
+
+module.exports = { isAuthenticated, isNotAuthenticated, authAs };

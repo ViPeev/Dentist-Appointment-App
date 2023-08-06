@@ -1,6 +1,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const { validation } = require("../middleware/validators");
+const { isAuthenticated, authAs } = require("../middleware/guards");
 const {
   getAll,
   getDentistDetails,
@@ -13,7 +14,7 @@ const {
 const router = express.Router();
 
 //get all dentists
-router.get("/", async (req, res) => {
+router.get("/", isAuthenticated, async (req, res) => {
   const accoundId = req.account.id;
   const { term } = req.query;
 
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/details/", async (req, res) => {
+router.get("/details/", authAs("DENTIST"), async (req, res) => {
   const accoundId = req.account.id;
 
   try {
@@ -36,7 +37,7 @@ router.get("/details/", async (req, res) => {
   }
 });
 
-router.get("/details/:id", async (req, res) => {
+router.get("/details/:id", isAuthenticated, async (req, res) => {
   const dentistId = Number(req.params.id);
 
   try {
@@ -50,6 +51,7 @@ router.get("/details/:id", async (req, res) => {
 //update dentist details
 router.put(
   "/details",
+  authAs("DENTIST"),
   check("phone").isAlphanumeric().optional({ checkFalsy: true }),
   check("description").isLength({ max: 255 }).optional({ checkFalsy: true }),
   validation(),
@@ -74,7 +76,7 @@ router.put(
 );
 
 //update dentist work schedule
-router.put("/schedule", async (req, res) => {
+router.put("/schedule", authAs("DENTIST"), async (req, res) => {
   const { days, start, end } = req.body;
   const dentistId = req.account.id;
 
@@ -87,7 +89,7 @@ router.put("/schedule", async (req, res) => {
 });
 
 //get all blacklisted patients by dentist
-router.get("/blacklist", async (req, res) => {
+router.get("/blacklist", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
   try {
@@ -99,7 +101,7 @@ router.get("/blacklist", async (req, res) => {
 });
 
 //remove patient from blacklist
-router.delete("/blacklist/:id", async (req, res) => {
+router.delete("/blacklist/:id", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const patientId = req.params.id;
 

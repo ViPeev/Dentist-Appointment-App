@@ -4,9 +4,10 @@ const {
   reviewDentist,
   getReviews,
 } = require("../controllers/reviewController");
+const { isAuthenticated, authAs } = require("../middleware/guards");
 
 //get dentist reviews for patient view
-router.get("/:id", async (req, res) => {
+router.get("/:id", isAuthenticated, async (req, res) => {
   const dentistId = req.params.id;
 
   try {
@@ -18,7 +19,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //get dentist own reviews
-router.get("/", async (req, res) => {
+router.get("/", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
   try {
@@ -30,7 +31,7 @@ router.get("/", async (req, res) => {
 });
 
 //patient reviews a dentist
-router.post("/", async (req, res) => {
+router.post("/", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
   const { details, dentistId, appointmentId } = req.body;
 

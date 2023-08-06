@@ -18,6 +18,7 @@ const eventRoutes = require("./routes/eventRoutes");
 const medicalRoutes = require("./routes/medicalRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const { authAs } = require("./middleware/guards");
 
 //middleware
 app.use(cors());
@@ -29,7 +30,7 @@ app.use(trimBody());
 //routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/accounts", accountRoutes);
-app.use("/api/v1/admins", adminRoutes);
+app.use("/api/v1/admins", authAs("ADMIN"), adminRoutes);
 app.use("/api/v1/dentists", dentistRoutes);
 app.use("/api/v1/patients", patientRoutes);
 app.use("/api/v1/events", eventRoutes);

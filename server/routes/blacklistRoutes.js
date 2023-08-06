@@ -7,6 +7,7 @@ const {
   blacklistDentist,
   blacklistPatient,
 } = require("../controllers/blacklistController.js");
+const { authAs } = require("../middleware/guards");
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ router.get("/dentists", async (req, res) => {
 
 router.post(
   "/dentist",
+  authAs("PATIENT"),
   body("dentistId").isNumeric(),
   body("reason").isString(),
   validation(),
@@ -48,7 +50,7 @@ router.post(
 
 router.post(
   "/patient",
-  auth.asDentist,
+  authAs("DENTIST"),
   body("patientId").isNumeric(),
   body("reason").isString(),
   validation(),

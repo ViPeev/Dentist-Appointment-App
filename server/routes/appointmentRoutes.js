@@ -8,11 +8,12 @@ const {
   getCalendarAppointmentDentist,
   scheduleAppointmentPatient,
   updateAppointmentStatus,
-} = require("../controllers/appointmentController");
+} = require("../controllers/appointmentsController");
+const { isAuthenticated, authAs } = require("../middleware/guards");
 
 const router = express.Router();
 
-router.get("/history", async (req, res) => {
+router.get("/history", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
 
   try {
@@ -23,7 +24,7 @@ router.get("/history", async (req, res) => {
   }
 });
 
-router.get("/all", async (req, res) => {
+router.get("/all", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
   try {
@@ -34,7 +35,7 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/dentist/:id", async (req, res) => {
+router.get("/dentist/:id", isAuthenticated, async (req, res) => {
   const dentistId = Number(req.params.id);
 
   try {
@@ -45,7 +46,7 @@ router.get("/dentist/:id", async (req, res) => {
   }
 });
 
-router.get("/patient/:id", async (req, res) => {
+router.get("/patient/:id", authAs("DENTIST"), async (req, res) => {
   const appointmentId = Number(req.params.id);
 
   try {
@@ -56,7 +57,7 @@ router.get("/patient/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authAs("DENTIST"), async (req, res) => {
   const appointmentId = Number(req.params.id);
 
   try {
@@ -67,7 +68,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", authAs("DENTIST"), async (req, res) => {
   const id = req.account.id;
 
   try {
@@ -78,7 +79,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authAs("PATIENT"), async (req, res) => {
   const id = req.account.id;
   const { dentist, date, start, end } = req.body;
 
@@ -90,7 +91,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/complete/:id", async (req, res) => {
+router.put("/complete/:id", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const appointmentId = parseInt(req.params.id);
   const { patientId } = req.body;
@@ -108,7 +109,7 @@ router.put("/complete/:id", async (req, res) => {
   }
 });
 
-router.put("/cancel/:id", async (req, res) => {
+router.put("/cancel/:id", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
   const appointmentId = parseInt(req.params.id);
   const { dentistId } = req.body;
@@ -120,13 +121,13 @@ router.put("/cancel/:id", async (req, res) => {
       appointmentId,
       "Cancelled"
     );
-    res.status(202).json({ ok: true,  message: "Appointment canceled" });
+    res.status(202).json({ ok: true, message: "Appointment canceled" });
   } catch (error) {
     return rejectResponse(res, error);
   }
 });
 
-router.put("/reject/:id", async (req, res) => {
+router.put("/reject/:id", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const appointmentId = parseInt(req.params.id);
   const { patientId } = req.body;
@@ -138,13 +139,13 @@ router.put("/reject/:id", async (req, res) => {
       appointmentId,
       "Cancelled"
     );
-    res.status(202).json({ ok: true,  message: "Appointment rejected" });
+    res.status(202).json({ ok: true, message: "Appointment rejected" });
   } catch (error) {
     return rejectResponse(res, error);
   }
 });
 
-router.put("/accept/:id", async (req, res) => {
+router.put("/accept/:id", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const appointmentId = parseInt(req.params.id);
   const { patientId } = req.body;
@@ -156,7 +157,7 @@ router.put("/accept/:id", async (req, res) => {
       appointmentId,
       "Accepted"
     );
-    res.status(202).json({ ok: true,  message: "Appointment accepted" });
+    res.status(202).json({ ok: true, message: "Appointment accepted" });
   } catch (error) {
     return rejectResponse(res, error);
   }

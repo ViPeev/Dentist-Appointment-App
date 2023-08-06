@@ -6,8 +6,9 @@ const {
   getPatientRating,
   getDentistRating,
 } = require("../controllers/ratingController");
+const { authAs } = require("../middleware/guards");
 
-router.get("/patient/", async (req, res) => {
+router.get("/patient/", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
 
   try {
@@ -21,7 +22,7 @@ router.get("/patient/", async (req, res) => {
   }
 });
 
-router.get("/dentist/", async (req, res) => {
+router.get("/dentist/", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
   try {
@@ -35,7 +36,7 @@ router.get("/dentist/", async (req, res) => {
   }
 });
 
-router.post("/patient", async (req, res) => {
+router.post("/patient", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const { patientId, rating } = req.body;
 
@@ -50,7 +51,7 @@ router.post("/patient", async (req, res) => {
   }
 });
 
-router.post("/dentist", async (req, res) => {
+router.post("/dentist", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
   const { dentistId, rating, appointmentId } = req.body;
 

@@ -4,6 +4,7 @@ const {
   getGlobalEvents,
   addGlobalEvent,
 } = require("../controllers/eventController");
+const { authAs } = require("../middleware/guards");
 
 //get events
 router.get("/", async (req, res) => {
@@ -16,13 +17,15 @@ router.get("/", async (req, res) => {
 });
 
 //get
-router.post("/", async (req, res) => {
+router.post("/", authAs("DENTIST"), async (req, res) => {
   const { title, description, date, start, end } = req.body;
   const dentistId = req.account.id;
 
   try {
     await addGlobalEvent({ title, description, date, start, end }, dentistId);
-    return res.status(201).json({ ok: true, message: "Event added successfully!" });
+    return res
+      .status(201)
+      .json({ ok: true, message: "Event added successfully!" });
   } catch (error) {
     return rejectResponse(res, error);
   }
