@@ -1,8 +1,9 @@
 const config = require("./config");
 const express = require("express");
 const cors = require("cors");
-const { authentication } = require("./middleware/auth");
+const authentication = require("./middleware/auth");
 const trimBody = require("./middleware/trimBody");
+const { authAs } = require("./middleware/guards");
 
 const app = express();
 const PORT = config.PORT || 5000;
@@ -18,7 +19,6 @@ const eventRoutes = require("./routes/eventRoutes");
 const medicalRoutes = require("./routes/medicalRoutes");
 const ratingRoutes = require("./routes/ratingRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const { authAs } = require("./middleware/guards");
 
 //middleware
 app.use(cors());

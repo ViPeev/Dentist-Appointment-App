@@ -3,6 +3,7 @@ const { body } = require("express-validator");
 const { validation } = require("../middleware/validators");
 const { register, login } = require("../controllers/authController");
 const { isAuthenticated, isNotAuthenticated } = require("../middleware/guards");
+const responseHandler = require("../utils/responseHandler");
 
 const router = express.Router();
 
@@ -21,12 +22,16 @@ router.post(
   async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
 
-    try {
-      const result = await register(firstName, lastName, email, password, role);
-      res.json({ ok: true, userData: result });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: register,
+      deps: [firstName, lastName, email, password, role],
+      statusCode: 201,
+      hasDataTransfer: true,
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 
@@ -40,17 +45,20 @@ router.post(
   async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-      const result = await login(email, password);
-      res.json({ ok: true, userData: result });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: login,
+      deps: [email, password],
+      hasDataTransfer: true,
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 
 //GET: /auth/logout - User logout
-router.get("/logout", isAuthenticated, (req, res) => {
+router.get("/logout", isAuthenticated, async (req, res) => {
   res.json({ ok: true });
 });
 

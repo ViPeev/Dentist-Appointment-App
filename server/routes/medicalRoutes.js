@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const {
   createRecord,
   getPatients,
@@ -7,68 +6,85 @@ const {
   getPatientMedicalRecord,
   getPatientMedicalRecordByDentist,
 } = require("../controllers/medicalRecordController");
+const responseHandler = require("../utils/responseHandler");
 const { authAs } = require("../middleware/guards");
+
+const router = express.Router();
 
 //get dentists by patient
 router.get("/dentists", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
 
-  try {
-    const result = await getDentists(patientId);
-    return res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getDentists,
+    deps: [patientId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/dentists/:id", authAs("PATIENT"), async (req, res) => {
   const dentistId = req.params.id;
   const patientId = req.account.id;
 
-  try {
-    const result = await getPatientMedicalRecordByDentist(patientId, dentistId);
-    return res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getPatientMedicalRecordByDentist,
+    deps: [patientId, dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/:id", authAs("DENTIST"), async (req, res) => {
   const patientId = Number(req.params.id);
   const dentistId = req.account.id;
 
-  try {
-    const result = await getPatientMedicalRecord(dentistId, patientId);
-    return res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getPatientMedicalRecord,
+    deps: [dentistId, patientId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
-  try {
-    const result = await getPatients(dentistId);
-    return res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getPatients,
+    deps: [dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.post("/", authAs("DENTIST"), async (req, res) => {
   const { details, patientId, appointmentId } = req.body;
   const dentistId = req.account.id;
 
-  try {
-    await createRecord({ details, patientId, appointmentId }, dentistId);
+  const params = {
+    res,
+    controller: createRecord,
+    deps: [{ details, patientId, appointmentId }, dentistId],
+    statusCode: 201,
+    hasDataTransfer: false,
+    message: "Medical record created successfully.",
+  };
 
-    return res
-      .status(201)
-      .json({ ok: true, message: "Medical record created successfully." });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  await responseHandler(params);
+  return;
 });
 
 module.exports = router;

@@ -5,8 +5,8 @@ const {
   updatePassword,
 } = require("../controllers/accountController");
 const { validation } = require("../middleware/validators");
-const { rejectResponse } = require("../utils/customError");
 const { isAuthenticated } = require("../middleware/guards");
+const responseHandler = require("../utils/responseHandler");
 
 const router = express.Router();
 
@@ -21,21 +21,25 @@ router.put(
   body("image").isEmail().optional({ checkFalsy: true }),
   validation(),
   async (req, res) => {
-    const { firstName, lastName, email, image } = req.body;
-    const accountId = req.account.id;
+    
+    const params = {
+      res,
+      controller: updateDetails,
+      deps: [
+        {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          image: req.body.image,
+          id: req.account.id,
+        },
+      ],
+      message: "Success",
+      hasDataTransfer: false,
+    };
 
-    try {
-      const result = await updateDetails({
-        firstName,
-        lastName,
-        email,
-        image,
-        id: accountId,
-      });
-      res.json({ ok: true, result, message: "Success" });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    await responseHandler(params);
+    return;
   }
 );
 
@@ -52,12 +56,16 @@ router.put(
     const { oldPass, newPass } = req.body;
     const accountId = req.account.id;
 
-    try {
-      await updatePassword(oldPass, newPass, accountId);
-      res.json({ ok: true, message: "Success" });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: updatePassword,
+      deps: [oldPass, newPass, accountId],
+      message: "Success",
+      hasDataTransfer: false,
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 

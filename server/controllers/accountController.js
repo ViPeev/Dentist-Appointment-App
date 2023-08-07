@@ -1,5 +1,5 @@
 const config = require("../config");
-const { ValidationError } = require("../utils/customError");
+const { ValidationError } = require("../utils/errorClass");
 const db = require("../utils/db");
 const bcrypt = require("bcrypt");
 

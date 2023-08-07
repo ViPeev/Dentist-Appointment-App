@@ -1,19 +1,24 @@
 const express = require("express");
-const router = express.Router();
 const {
   getGlobalEvents,
   addGlobalEvent,
 } = require("../controllers/eventController");
+const responseHandler = require("../utils/responseHandler");
 const { authAs } = require("../middleware/guards");
+
+const router = express.Router();
 
 //get events
 router.get("/", async (req, res) => {
-  try {
-    const result = await getGlobalEvents();
-    res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getGlobalEvents,
+    deps: [],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 //get
@@ -21,14 +26,17 @@ router.post("/", authAs("DENTIST"), async (req, res) => {
   const { title, description, date, start, end } = req.body;
   const dentistId = req.account.id;
 
-  try {
-    await addGlobalEvent({ title, description, date, start, end }, dentistId);
-    return res
-      .status(201)
-      .json({ ok: true, message: "Event added successfully!" });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: addGlobalEvent,
+    deps: [{ title, description, date, start, end }, dentistId],
+    statusCode: 201,
+    hasDataTransfer: false,
+    message: "Event added successfully!",
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 module.exports = router;

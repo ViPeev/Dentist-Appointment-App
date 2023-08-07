@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const config = require("../config");
 const roles = require("../utils/roles");
 const { login } = require("./authController");
-const { ValidationError } = require("../utils/customError");
+const { ValidationError } = require("../utils/errorClass");
 
 const getDentistDetails = async (dentistId) => {
   const getDetailsQuery = `

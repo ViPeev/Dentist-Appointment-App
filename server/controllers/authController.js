@@ -2,7 +2,7 @@ const db = require("../utils/db");
 const bcrypt = require("bcrypt");
 const config = require("../config");
 const { sign } = require("../utils/jsonwebtoken");
-const { ValidationError } = require("../utils/customError");
+const { ValidationError } = require("../utils/errorClass");
 
 //insert to role db tables
 
@@ -67,7 +67,7 @@ const register = async (firstName, lastName, email, password, role) => {
   }
 
   const hashPass = await bcrypt.hash(password, config.BCRYPT_ROUNDS);
-  
+
   await db.query(createQuery, [firstName, lastName, email, hashPass, role]);
   await insertByRole(email);
 

@@ -8,25 +8,32 @@ const {
   blacklistPatient,
 } = require("../controllers/blacklistController.js");
 const { authAs } = require("../middleware/guards");
+const responseHandler = require("../utils/responseHandler");
 
 const router = express.Router();
 
 router.get("/patients", async (req, res) => {
-  try {
-    const result = await getBlacklistedPatients();
-    res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getBlacklistedPatients,
+    deps: [],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/dentists", async (req, res) => {
-  try {
-    const result = await getBlacklistedDentists();
-    res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getBlacklistedDentists,
+    deps: [],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.post(
@@ -36,15 +43,20 @@ router.post(
   body("reason").isString(),
   validation(),
   async (req, res) => {
-    const id = req.account.id;
+    const accountId = req.account.id;
     const { dentistId, reason } = req.body;
 
-    try {
-      await blacklistDentist(id, dentistId, reason);
-      res.status(201).json({ ok: true, message: "Dentist is blacklisted!" });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: blacklistDentist,
+      deps: [accountId, dentistId, reason],
+      statusCode: 201,
+      hasDataTransfer: false,
+      message: "Dentist is blacklisted!",
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 
@@ -55,15 +67,20 @@ router.post(
   body("reason").isString(),
   validation(),
   async (req, res) => {
-    const id = req.account.id;
+    const accountId = req.account.id;
     const { patientId, reason } = req.body;
 
-    try {
-      await blacklistPatient(id, patientId, reason);
-      res.status(201).json({ ok: true, message: "Patient is blacklisted!" });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: blacklistPatient,
+      deps: [accountId, patientId, reason],
+      statusCode: 201,
+      hasDataTransfer: false,
+      message: "Patient is blacklisted!",
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 

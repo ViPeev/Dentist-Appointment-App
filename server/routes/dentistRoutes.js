@@ -11,41 +11,52 @@ const {
   getBlacklist,
   removeFromBlacklist,
 } = require("../controllers/dentistController");
+const responseHandler = require("../utils/responseHandler");
+
 const router = express.Router();
 
 //get all dentists
 router.get("/", isAuthenticated, async (req, res) => {
-  const accoundId = req.account.id;
+  const accountId = req.account.id;
   const { term } = req.query;
 
-  try {
-    const result = await getAll(accoundId, term);
-    return res.json({ ok: true, result });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getAll,
+    deps: [accountId, term],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/details/", authAs("DENTIST"), async (req, res) => {
-  const accoundId = req.account.id;
+  const accountId = req.account.id;
 
-  try {
-    const result = await getDentistDetails(accoundId);
-    return res.json({ ok: true, result });
-  } catch {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getDentistDetails,
+    deps: [accountId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/details/:id", isAuthenticated, async (req, res) => {
   const dentistId = Number(req.params.id);
 
-  try {
-    const result = await getSelectedDentistFullDetails(dentistId);
-    return res.json({ ok: true, result });
-  } catch {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getSelectedDentistFullDetails,
+    deps: [dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 //update dentist details
@@ -66,12 +77,17 @@ router.put(
       });
     }
 
-    try {
-      await updateDentistDetails({ type, city, phone, description }, accountId);
-      res.status(202).json({ ok: true, message: "Details updated" });
-    } catch (error) {
-      return rejectResponse(res, error);
-    }
+    const params = {
+      res,
+      controller: updateDentistDetails,
+      deps: [{ type, city, phone, description }, accountId],
+      statusCode: 202,
+      hasDataTransfer: false,
+      message: "Details successfully updated",
+    };
+
+    await responseHandler(params);
+    return;
   }
 );
 
@@ -80,24 +96,30 @@ router.put("/schedule", authAs("DENTIST"), async (req, res) => {
   const { days, start, end } = req.body;
   const dentistId = req.account.id;
 
-  try {
-    const result = await updateWorkDetails(days, start, end, dentistId);
-    return res.json({ ok: true, result });
-  } catch {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: updateWorkDetails,
+    deps: [days, start, end, dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 //get all blacklisted patients by dentist
 router.get("/blacklist", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
-  try {
-    const result = await getBlacklist(dentistId);
-    return res.json({ ok: true, result });
-  } catch {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getBlacklist,
+    deps: [dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 //remove patient from blacklist
@@ -105,12 +127,16 @@ router.delete("/blacklist/:id", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const patientId = req.params.id;
 
-  try {
-    await removeFromBlacklist(dentistId, patientId);
-    return res.json({ ok: true, message: "Patient removed from blacklist" });
-  } catch {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: removeFromBlacklist,
+    deps: [dentistId, patientId],
+    hasDataTransfer: false,
+    message: "Patient removed from blacklist",
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 module.exports = router;

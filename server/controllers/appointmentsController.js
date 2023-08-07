@@ -1,5 +1,5 @@
 const db = require("../utils/db");
-const { ValidationError } = require("../utils/customError");
+const { ValidationError } = require("../utils/errorClass");
 
 //patient requests a new appointment /7
 const scheduleAppointmentPatient = async (

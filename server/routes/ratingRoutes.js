@@ -6,64 +6,69 @@ const {
   getPatientRating,
   getDentistRating,
 } = require("../controllers/ratingController");
+const responseHandler = require("../utils/responseHandler");
 const { authAs } = require("../middleware/guards");
 
 router.get("/patient/", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
 
-  try {
-    const result = await getPatientRating(patientId);
-    return res.json({
-      ok: true,
-      result,
-    });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getPatientRating,
+    deps: [patientId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.get("/dentist/", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
 
-  try {
-    const result = await getDentistRating(dentistId);
-    return res.json({
-      ok: true,
-      result,
-    });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: getDentistRating,
+    deps: [dentistId],
+    hasDataTransfer: true,
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.post("/patient", authAs("DENTIST"), async (req, res) => {
   const dentistId = req.account.id;
   const { patientId, rating } = req.body;
 
-  try {
-    await ratePatient(patientId, rating, dentistId);
-    return res.status(201).json({
-      ok: true,
-      message: "Patient rated successfully!",
-    });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: ratePatient,
+    deps: [patientId, rating, dentistId],
+    statusCode: 201,
+    hasDataTransfer: false,
+    message: "Patient rated successfully!",
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 router.post("/dentist", authAs("PATIENT"), async (req, res) => {
   const patientId = req.account.id;
   const { dentistId, rating, appointmentId } = req.body;
 
-  try {
-    await rateDentist(patientId, rating, dentistId, appointmentId);
-    return res.status(201).json({
-      ok: true,
-      message: "Dentist rated successfully!",
-    });
-  } catch (error) {
-    return rejectResponse(res, error);
-  }
+  const params = {
+    res,
+    controller: rateDentist,
+    deps: [patientId, rating, dentistId, appointmentId],
+    statusCode: 201,
+    hasDataTransfer: false,
+    message: "Dentist rated successfully!",
+  };
+
+  await responseHandler(params);
+  return;
 });
 
 module.exports = router;

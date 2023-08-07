@@ -1,7 +1,7 @@
 const config = require("../config");
-const jwt = require("../lib/jsonwebtoken");
+const jwt = require("../utils/jsonwebtoken");
 
-exports.authentication = () => async (req, res, next) => {
+const authentication = () => async (req, res, next) => {
   console.log(req.header);
   const token = req.header["X-Authorization"];
 
@@ -17,3 +17,5 @@ exports.authentication = () => async (req, res, next) => {
   }
   next();
 };
+
+module.exports = authentication;
