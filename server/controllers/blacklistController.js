@@ -39,7 +39,7 @@ const addAccountToBlacklist = async (
     [dentistId, patientId]
   );
 
-  if (existingRecords.rows.length === 0) {
+  if (existingRecords.rowCount === 0) {
     const insertQuery = `INSERT INTO ${table} (dentist_id, patient_id, reason) VALUES($1,$2,$3)`;
     await db.query(insertQuery, [dentistId, patientId, reason]);
   }

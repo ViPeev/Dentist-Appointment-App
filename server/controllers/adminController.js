@@ -70,7 +70,7 @@ const register = async (firstName, lastName, email, password) => {
   const findQuery = "SELECT email FROM accounts WHERE email=$1";
   const findAccountResult = await db.query(findQuery, findValues);
 
-  if (findAccountResult.rows.length !== 0) {
+  if (findAccountResult.rowCount !== 0) {
     throw new ValidationError("E-mail is already taken! - 400");
   }
 
@@ -101,7 +101,7 @@ const getAccountData = async (accountId) => {
 
   const result = await db.query(getAccountQuery, [accountId]);
 
-  if (result.rows.length === 0) {
+  if (result.rowCount === 0) {
     throw new ValidationError("No account found with the given id! - 404");
   }
 
@@ -125,7 +125,7 @@ const toggleSuspend = async (accountId, state) => {
   // Check if account with given id exists
   const result = await db.query(findAccQuery, [accountId]);
 
-  if (result.rows.length === 0) {
+  if (result.rowCount === 0) {
     throw new ValidationError("No account found with the given id! - 404");
   }
 

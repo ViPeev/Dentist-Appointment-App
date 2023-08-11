@@ -27,7 +27,7 @@ const getPatients = async (dentistId) => {
   `;
 
   const result = await db.query(selectPatientsQuery, [dentistId]);
-  patientList = result.rows;
+  const patientList = result.rows;
   const filteredPatients = [];
 
   // Remove blacklisted patients
@@ -36,7 +36,7 @@ const getPatients = async (dentistId) => {
       "SELECT id FROM blacklisted_patients WHERE patient_id=$1 AND dentist_id=$2",
       [patient.patient_id, dentistId]
     );
-    if (queryResult.rows.length === 0) {
+    if (queryResult.rowCount === 0) {
       filteredPatients.push(patient);
     }
   }

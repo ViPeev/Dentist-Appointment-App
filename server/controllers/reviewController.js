@@ -10,7 +10,7 @@ const reviewDentist = async (
     "SELECT appointment_id FROM dentist_reviews WHERE appointment_id = $1";
 
   const findReview = await db.query(selectReview, [appointmentId]);
-  if (findReview.rows.length !== 0) {
+  if (findReview.rowCount !== 0) {
     throw new ValidationError("Dentist has already been reviewed! - 403");
   }
 

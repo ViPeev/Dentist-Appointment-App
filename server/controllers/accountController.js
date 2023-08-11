@@ -27,7 +27,7 @@ const updateDetails = async ({ firstName, lastName, email, image, id }) => {
 
     const isEmailTaken = await db.query(isEmailTakenQuery, [email]);
 
-    if (isEmailTaken.rows.length !== 0) {
+    if (isEmailTaken.rowCount !== 0) {
       throw new ValidationError("E-mail is already taken! - 400");
     }
 

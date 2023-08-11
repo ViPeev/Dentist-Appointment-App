@@ -3,7 +3,6 @@ const db = require("../utils/db");
 const roles = require("../utils/roles");
 
 const getAll = async (accountId, term) => {
-  const dentists = [];
   let searchQuery =
     "SELECT id,first_name,last_name,email,description,city,dentist_type,phone FROM accounts JOIN dentists ON dentists.account_id=accounts.id WHERE role_id=$1";
   const calculateRatingQuery =
@@ -17,7 +16,7 @@ const getAll = async (accountId, term) => {
   }
 
   const searchResult = await db.query(searchQuery, searchParams);
-  dentists = searchResult.rows;
+  const dentists = searchResult.rows;
 
   for (const dentist of dentists) {
     try {
@@ -36,7 +35,7 @@ const getAll = async (accountId, term) => {
       [dentist.id, accountId]
     );
 
-    if (result.rows.length === 0) {
+    if (result.rowCount === 0) {
       filteredDentists.push(dentist);
     }
   }

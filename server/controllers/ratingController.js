@@ -18,7 +18,7 @@ const rateDentist = async (
 
   const findRating = await db.query(selectRating, [appointmentId]);
 
-  if (findRating.rows.length !== 0) {
+  if (findRating.rowCount !== 0) {
     throw new ValidationError("Dentist has already been rated! - 403");
   }
 

@@ -11,6 +11,7 @@ const insertByRole = async (email) => {
 
   const result = await db.query(findQuery, [email]);
   const role = result.rows[0].role_id;
+
   if (role === 2) {
     const insertDentist = "INSERT INTO DENTISTS(account_id) VALUES($1)";
     await db.query(insertDentist, [result.rows[0].id]);
@@ -27,7 +28,7 @@ const login = async (email, password) => {
   const findQuery = "SELECT * FROM accounts WHERE email=$1";
   const result = await db.query(findQuery, [email]);
 
-  if (result.rows.length === 0) {
+  if (result.rowCount === 0) {
     throw new ValidationError("Invalid email or password! - 400");
   }
 
@@ -63,7 +64,7 @@ const register = async (firstName, lastName, email, password, role) => {
 
   const result = await db.query(findQuery, [email]);
 
-  if (result.rows.length !== 0) {
+  if (result.rowCount !== 0) {
     throw new ValidationError("E-mail is already taken! - 400");
   }
 
