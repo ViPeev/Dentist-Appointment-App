@@ -45,7 +45,7 @@ const ModalWrapper: React.FC<childrenType> = ({ Form }) => {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                 <Form>
-                  <CloseButton closeModal={closeModal} text="Close" />
+                  <CloseButton closeModal={closeModal} text="&#10005;" />
                 </Form>
               </Dialog.Panel>
             </Transition.Child>

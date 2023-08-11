@@ -5,8 +5,8 @@ const initialState: { isLoading: boolean; userData: {} | null } = {
   isLoading: false,
   userData: null,
 };
-const loginURL: string = "accounts/login";
-const registerURL: string = "accounts/";
+const loginURL: string = "auth/login";
+const registerURL: string = "auth/";
 
 export const login = createAsyncThunk("auth/login", async (payload) => {
   const response = await post(loginURL, payload);
@@ -15,7 +15,6 @@ export const login = createAsyncThunk("auth/login", async (payload) => {
 
 export const register = createAsyncThunk("auth/register", async (payload) => {
   const response = await post(registerURL, payload);
-  console.log(response);
   return response;
 });
 
@@ -28,7 +27,7 @@ export const authSlice = createSlice({
     },
     [login.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.userData = action.payload;
+      state.userData = action.payload.result;
     },
     [login.rejected]: (state, action) => {
       state.isLoading = false;
@@ -39,7 +38,7 @@ export const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.userData = action.payload;
+      state.userData = action.payload.result;
     },
     [register.rejected]: (state, action) => {
       state.isLoading = false;
