@@ -8,7 +8,7 @@ const rejectResponse = (res, error) => {
     [message, statusCode] = error.message.split(" - ");
   }
 
-  return res.status(statusCode).json({ ok: false, message });
+  return res.status(Number(statusCode)).json({ ok: false, message });
 };
 
 const responseHandler = async ({
@@ -22,17 +22,17 @@ const responseHandler = async ({
   const payload = { ok: true };
 
   try {
-    
     if (hasDataTransfer) {
       const result = await controller(...deps);
       payload.result = result;
+      console.log(result)
     } else {
       await controller(...deps);
       payload.message = message;
     }
-
     return res.status(statusCode || 200).json(payload);
   } catch (error) {
+    console.log(error)
     return rejectResponse(res, error);
   }
 };

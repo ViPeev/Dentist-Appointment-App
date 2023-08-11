@@ -44,7 +44,6 @@ router.post(
   validation(),
   async (req, res) => {
     const { email, password } = req.body;
-
     const params = {
       res,
       controller: login,

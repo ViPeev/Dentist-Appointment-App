@@ -10,15 +10,15 @@ const insertByRole = async (email) => {
   const findQuery = "SELECT id, role_id FROM accounts WHERE email=$1";
 
   const result = await db.query(findQuery, [email]);
-
-  if (result.role_id === 2) {
+  const role = result.rows[0].role_id;
+  if (role === 2) {
     const insertDentist = "INSERT INTO DENTISTS(account_id) VALUES($1)";
-    await db.query(insertDentist, [result.id]);
+    await db.query(insertDentist, [result.rows[0].id]);
   }
 
-  if (result.role_id === 3) {
+  if (role === 3) {
     const insertPatient = "INSERT INTO PATIENTS(account_id) VALUES($1)";
-    await db.query(insertPatient, [result.id]);
+    await db.query(insertPatient, [result.rows[0].id]);
   }
 };
 
@@ -27,29 +27,30 @@ const login = async (email, password) => {
   const findQuery = "SELECT * FROM accounts WHERE email=$1";
   const result = await db.query(findQuery, [email]);
 
-  if (result.row.length === 0) {
+  if (result.rows.length === 0) {
     throw new ValidationError("Invalid email or password! - 400");
   }
 
-  if (result.status.trim().toLowerCase() !== "active") {
+  const account = result.rows[0];
+  if (account.status.trim().toLowerCase() !== "active") {
     throw new ValidationError("Account is suspended! - 403");
   }
 
-  const isPassValid = await bcrypt.compare(password, result.pwd);
+  const isPassValid = await bcrypt.compare(password, account.pwd);
   if (!isPassValid) {
     throw new ValidationError("Invalid E-mail or password! - 400");
   }
 
   const payload = {
-    id: result.id,
-    role: result.role_id,
-    firstName: result["first_name"],
-    lastName: result["last_name"],
-    email: result.email,
+    id: account.id,
+    role: account.role_id,
+    firstName: account["first_name"],
+    lastName: account["last_name"],
+    email: account.email,
     image: null,
   };
 
-  const token = sign(payload, config.JWT_SECRET, { expiresIn: "48h" });
+  const token = await sign(payload, config.JWT_SECRET, { expiresIn: "48h" });
   return { accessToken: token, ...payload };
 };
 
@@ -62,7 +63,7 @@ const register = async (firstName, lastName, email, password, role) => {
 
   const result = await db.query(findQuery, [email]);
 
-  if (result.row.length !== 0) {
+  if (result.rows.length !== 0) {
     throw new ValidationError("E-mail is already taken! - 400");
   }
 
