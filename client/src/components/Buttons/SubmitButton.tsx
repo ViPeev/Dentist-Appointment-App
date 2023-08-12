@@ -1,4 +1,4 @@
-const SubmitButton: React.FC = ({ isLoading }) => {
+const SubmitButton: React.FC = ({ isLoading, children }) => {
   return (
     <button
       type="submit"
@@ -7,7 +7,7 @@ const SubmitButton: React.FC = ({ isLoading }) => {
     >
       {!isLoading ? (
         <>
-          Submit
+          {children}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

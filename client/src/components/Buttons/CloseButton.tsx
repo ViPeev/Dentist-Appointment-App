@@ -1,3 +1,4 @@
+
 const CloseButton: React.FC = ({ closeModal, text }) => {
   return (
     <button
