@@ -1,22 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { post } from "../api/api";
+import { dataType, post } from "../api/api";
 
-const initialState: { isLoading: boolean; userData: {} | null } = {
+const initialState: {
+  isLoading: boolean;
+  userData: {} | null;
+  error: string | null;
+} = {
   isLoading: false,
   userData: null,
+  error: null,
 };
+
 const loginURL: string = "auth/login";
 const registerURL: string = "auth/";
 
-export const login = createAsyncThunk("auth/login", async (payload) => {
-  const response = await post(loginURL, payload);
-  return response;
-});
+export const login = createAsyncThunk(
+  "auth/login",
+  async (payload: dataType) => {
+    const response = await post(loginURL, payload);
+    return response;
+  }
+);
 
-export const register = createAsyncThunk("auth/register", async (payload) => {
-  const response = await post(registerURL, payload);
-  return response;
-});
+export const register = createAsyncThunk(
+  "auth/register",
+  async (payload: dataType) => {
+    const response = await post(registerURL, payload);
+    return response;
+  }
+);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -31,7 +43,8 @@ export const authSlice = createSlice({
     },
     [login.rejected]: (state, action) => {
       state.isLoading = false;
-      state.userData = action.payload;
+      state.userData = null;
+      state.error = action.error?.message || null;
     },
     [register.pending]: (state) => {
       state.isLoading = true;
@@ -42,7 +55,8 @@ export const authSlice = createSlice({
     },
     [register.rejected]: (state, action) => {
       state.isLoading = false;
-      state.userData = action.payload;
+      state.userData = null;
+      state.error = action.error?.message || null;
     },
   },
 });

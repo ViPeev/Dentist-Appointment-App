@@ -7,6 +7,7 @@ import { registerRole } from "../utils/types";
 import { loginRoutes } from "../utils/roles";
 import Select from "../components/Misc/Select";
 import ModalWrapper from "../layouts/ModalWrapper";
+import SubmitButton from "../components/Misc/SubmitButton";
 
 const roles: registerRole[] = [
   { id: 3, name: "looking for a dentist" },
@@ -27,14 +28,14 @@ const RegisterForm: React.FC = ({ children }) => {
   });
 
   const dispatch = useDispatch();
-  const authData = useSelector(authSelector);
+  const { error, isLoading, userData } = useSelector(authSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authData.userData !== null) {
-      navigate(loginRoutes[authData.userData.role]);
+    if (userData !== null) {
+      navigate(loginRoutes[userData?.role || 2]);
     }
-  }, [authData.userData]);
+  }, [userData]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => {
@@ -55,7 +56,7 @@ const RegisterForm: React.FC = ({ children }) => {
 
   return (
     <div className="flex relative min-h-full flex-1 flex-col justify-center px-3 py-6 lg:px-4">
-      {/* Close Button here*/}  
+      {/* Close Button here*/}
       {children}
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -170,12 +171,7 @@ const RegisterForm: React.FC = ({ children }) => {
             </div>
           </div>
           <div className="mb-4">
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-cyan-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 transition-colors duration-200"
-            >
-              Submit
-            </button>
+            <SubmitButton isLoading={isLoading} />
           </div>
         </form>
       </div>

@@ -5,6 +5,7 @@ import { login } from "../features/authSlice";
 import { authSelector } from "../utils/selectors";
 import { loginRoutes } from "../utils/roles";
 import ModalWrapper from "../layouts/ModalWrapper";
+import SubmitButton from "../components/Misc/SubmitButton";
 
 const Login: React.FC = () => {
   return <ModalWrapper Form={LoginForm} />;
@@ -13,14 +14,15 @@ const Login: React.FC = () => {
 const LoginForm: React.FC = ({ children }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
-  const authData = useSelector(authSelector);
+  const { error, isLoading, userData } = useSelector(authSelector);
   const navigate = useNavigate();
 
+  console.log(error, isLoading, userData);
   useEffect(() => {
-    if (authData.userData !== null) {
-      navigate(loginRoutes[authData.userData.role]);
+    if (userData !== null) {
+      navigate(loginRoutes[userData?.role || 2]);
     }
-  }, [authData.userData]);
+  }, [userData]);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => {
@@ -86,12 +88,7 @@ const LoginForm: React.FC = ({ children }) => {
             </div>
           </div>
           <div className="mb-4">
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-cyan-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 transition-colors duration-200"
-            >
-              Submit
-            </button>
+            <SubmitButton isLoading={isLoading} />
           </div>
         </form>
       </div>
