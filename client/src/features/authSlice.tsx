@@ -1,13 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { dataType, post } from "../api/api";
+import { setUserData, getUserData, clearUserData } from "../utils/localStorage";
+
+export interface userType {
+  accessToken?: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  id: string;
+  image: null | string;
+  role: number;
+}
 
 const initialState: {
   isLoading: boolean;
-  userData: {} | null;
+  userData: userType | null;
   error: string | null;
 } = {
   isLoading: false,
-  userData: null,
+  userData: getUserData(),
   error: null,
 };
 
@@ -33,6 +44,11 @@ export const register = createAsyncThunk(
 export const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {
+    logout(state) {
+      state.userData = null;
+    },
+  },
   extraReducers: {
     [login.pending]: (state) => {
       state.isLoading = true;
@@ -40,6 +56,7 @@ export const authSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.userData = action.payload.result;
+      setUserData(action.payload.result);
     },
     [login.rejected]: (state, action) => {
       state.isLoading = false;
@@ -52,6 +69,7 @@ export const authSlice = createSlice({
     [register.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.userData = action.payload.result;
+      setUserData(action.payload.result);
     },
     [register.rejected]: (state, action) => {
       state.isLoading = false;
@@ -60,5 +78,5 @@ export const authSlice = createSlice({
     },
   },
 });
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -5,7 +5,7 @@ import { login } from "../features/authSlice";
 import { authSelector } from "../utils/selectors";
 import { loginRoutes } from "../utils/roles";
 import ModalWrapper from "../layouts/ModalWrapper";
-import SubmitButton from "../components/Misc/SubmitButton";
+import SubmitButton from "../components/Buttons/SubmitButton";
 
 const Login: React.FC = () => {
   return <ModalWrapper Form={LoginForm} />;
@@ -17,7 +17,6 @@ const LoginForm: React.FC = ({ children }) => {
   const { error, isLoading, userData } = useSelector(authSelector);
   const navigate = useNavigate();
 
-  console.log(error, isLoading, userData);
   useEffect(() => {
     if (userData !== null) {
       navigate(loginRoutes[userData?.role || 2]);
@@ -88,7 +87,7 @@ const LoginForm: React.FC = ({ children }) => {
             </div>
           </div>
           <div className="mb-4">
-            <SubmitButton isLoading={isLoading} />
+          <SubmitButton isLoading={isLoading}>Submit</SubmitButton>
           </div>
         </form>
       </div>

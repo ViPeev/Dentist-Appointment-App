@@ -7,7 +7,7 @@ import { registerRole } from "../utils/types";
 import { loginRoutes } from "../utils/roles";
 import Select from "../components/Misc/Select";
 import ModalWrapper from "../layouts/ModalWrapper";
-import SubmitButton from "../components/Misc/SubmitButton";
+import SubmitButton from "../components/Buttons/SubmitButton";
 
 const roles: registerRole[] = [
   { id: 3, name: "looking for a dentist" },
@@ -171,7 +171,7 @@ const RegisterForm: React.FC = ({ children }) => {
             </div>
           </div>
           <div className="mb-4">
-            <SubmitButton isLoading={isLoading} />
+            <SubmitButton isLoading={isLoading}>Submit</SubmitButton>
           </div>
         </form>
       </div>

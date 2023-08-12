@@ -1,3 +1,5 @@
+import { getAuthToken } from "../utils/localStorage";
+
 const deploy: boolean = false;
 export const host: string = deploy ? "" : "http://localhost:5000/api/v1/";
 
@@ -14,7 +16,6 @@ async function request(url: string, options: optionTypes) {
 
   if (response.ok === false) {
     const error = await response.json();
-    console.log(error);
     throw new Error(error.message);
   }
 
@@ -28,8 +29,8 @@ function getOptions(method?: string, body?: {}) {
     headers: {},
   } as optionTypes;
 
-  const token = localStorage.getItem("authToken");
-
+  const token = getAuthToken();
+  
   if (token != null) {
     options.headers["X-Authorization"] = token;
   }

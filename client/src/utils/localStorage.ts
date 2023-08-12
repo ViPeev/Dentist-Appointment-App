@@ -1,15 +1,16 @@
 import { userType } from "../features/authSlice";
 
 function setUserData(data: userType): void {
-  localStorage.setItem("authToken", data.accessToken);
+  localStorage.setItem("authToken", data.accessToken as string);
   localStorage.setItem(
     "userData",
     JSON.stringify({
       email: data.email,
-      _id: data.id,
+      id: data.id,
       firstName: data.firstName,
       lastName: data.lastName,
       image: data.image,
+      role: data.role,
     })
   );
 }
@@ -24,9 +25,9 @@ function getUserData(): Omit<userType, "accessToken"> | null {
   return userData ? JSON.parse(userData) : null;
 }
 
-function getAuthToken(): Pick<userType, "accessToken"> | null {
+function getAuthToken(): string | null {
   const authToken = localStorage.getItem("authToken");
-  return authToken ? JSON.parse(authToken) : null;
+  return authToken;
 }
 
 function updateUserData(updatedDetails: Partial<userType>): void {
@@ -60,4 +61,10 @@ function updateUserData(updatedDetails: Partial<userType>): void {
 //   localStorage.removeItem("credentials");
 // }
 
-export { setUserData, clearUserData, getUserData, updateUserData getAuthToken };
+export {
+  setUserData,
+  clearUserData,
+  getUserData,
+  updateUserData,
+  getAuthToken,
+};
