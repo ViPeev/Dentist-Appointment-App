@@ -4,17 +4,19 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
 import TabPanel from "./layouts/TabPanel";
-import Settings from "./pages/Settings";
+import Settings from "./pages/patient/Settings";
 import MedicalRecord from "./pages/MedicalRedord";
 import Appoinments from "./pages/Appointments";
 import DentistList from "./pages/DentistsList";
 import Blacklist from "./pages/Blacklist";
+import Logout from "./pages/Logout";
+import NotFound from "./pages/404";
 
 const tabs = [
-  { name: "Settings", href: "/patient/settings" },
-  { name: "Dentists", href: "/patient/dentists" },
   { name: "Appointments", href: "/patient/appointments" },
+  { name: "Dentists", href: "/patient/dentists" },
   { name: "Medical Record", href: "/patient/medical-record" },
+  { name: "Settings", href: "/patient/settings" },
   { name: "Blacklist", href: "/patient/blacklist" },
 ];
 
@@ -42,7 +44,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "logout",
-        Component: () => <h1>Logout</h1>,
+        Component: () => <Logout />,
       },
       {
         path: "patient",
@@ -139,6 +141,12 @@ export const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "*",
+        Component: () => (
+          <NotFound />
+        ),
       },
     ],
   },
