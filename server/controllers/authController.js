@@ -29,17 +29,17 @@ const login = async (email, password) => {
   const result = await db.query(findQuery, [email]);
 
   if (result.rowCount === 0) {
-    throw new ValidationError("Invalid email or password! - 400");
+    throw new ValidationError("Invalid email or password!", 400);
   }
 
   const account = result.rows[0];
   if (account.status.trim().toLowerCase() !== "active") {
-    throw new ValidationError("Account is suspended! - 403");
+    throw new ValidationError("Account is suspended!", 403);
   }
 
   const isPassValid = await bcrypt.compare(password, account.pwd);
   if (!isPassValid) {
-    throw new ValidationError("Invalid E-mail or password! - 400");
+    throw new ValidationError("Invalid E-mail or password!", 400);
   }
 
   const payload = {
@@ -65,7 +65,7 @@ const register = async (firstName, lastName, email, password, role) => {
   const result = await db.query(findQuery, [email]);
 
   if (result.rowCount !== 0) {
-    throw new ValidationError("E-mail is already taken! - 400");
+    throw new ValidationError("E-mail is already taken!", 400);
   }
 
   const hashPass = await bcrypt.hash(password, config.BCRYPT_ROUNDS);

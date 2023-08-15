@@ -5,10 +5,11 @@ const rejectResponse = (res, error) => {
   let message = "Internal server error!";
 
   if (error instanceof ValidationError) {
-    [message, statusCode] = error.message.split(" - ");
+    message = error.message;
+    statusCode = error.code;
   }
 
-  return res.status(Number(statusCode)).json({ ok: false, message });
+  return res.status(statusCode).json({ ok: false, message });
 };
 
 const responseHandler = async ({
@@ -25,14 +26,12 @@ const responseHandler = async ({
     if (hasDataTransfer) {
       const result = await controller(...deps);
       payload.result = result;
-      console.log(result)
     } else {
       await controller(...deps);
       payload.message = message;
     }
     return res.status(statusCode || 200).json(payload);
   } catch (error) {
-    console.log(error)
     return rejectResponse(res, error);
   }
 };

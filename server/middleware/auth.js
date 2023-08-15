@@ -2,7 +2,7 @@ const config = require("../config");
 const jwt = require("../utils/jsonwebtoken");
 
 const authentication = () => async (req, res, next) => {
-  const token = req.header["X-Authorization"];
+  const token = req.headers["x-authorization"];
 
   if (token) {
     try {

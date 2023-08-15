@@ -15,7 +15,7 @@ const updateAccountStrikes = async (accountId) => {
   const result = await db.query(updateQuery, [accountId]);
 
   if (result.rowCount === 0) {
-    throw new ValidationError("No account found with the given id! - 404");
+    throw new ValidationError("No account found with the given id!", 400);
   }
 
   return result.rows[0]["strikes"];

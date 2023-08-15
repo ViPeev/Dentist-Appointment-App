@@ -71,7 +71,7 @@ const register = async (firstName, lastName, email, password) => {
   const findAccountResult = await db.query(findQuery, findValues);
 
   if (findAccountResult.rowCount !== 0) {
-    throw new ValidationError("E-mail is already taken! - 400");
+    throw new ValidationError("E-mail is already taken!",400);
   }
 
   const createQuery =
