@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import { childrenType } from "../utils/types";
-import CloseButton from "../components/Misc/CloseButton";
+import CloseButton from "../components/Buttons/CloseButton";
 
 const ModalWrapper: React.FC<childrenType> = ({ Form }) => {
   const [isShown, setIsShown] = useState<boolean>(false);

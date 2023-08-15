@@ -1,22 +1,37 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { tabType } from "../utils/types";
+import { useEffect, useState } from "react";
 
 const TabPanel: React.FC<{ tabs: tabType[] }> = ({ tabs }) => {
+  let [route, setRoute] = useState<string>("appointments");
+  const navigate = useNavigate();
+
+  useEffect((): void => {
+    navigate(route);
+  }, [route]);
+
+  const changeHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const newRoute = e.target.value?.toLowerCase().replace(" ", "-");
+    setRoute(newRoute || "appointments");
+  };
+
   return (
     <>
-      <div>
-        <div className="sm:hidden">
+      <div className="p-5 sticky top-0">
+        <div className="sm:hidden flex justify-center">
           <label htmlFor="tabs" className="sr-only">
             Select a tab
           </label>
-          {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
           <select
             id="tabs"
             name="tabs"
-            className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            className="block w-3/4 rounded-md border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
+            onChange={changeHandler}
           >
             {tabs.map((tab) => (
-              <option key={tab.name}>{tab.name}</option>
+              <option key={tab.name} value={tab.name}>
+                {tab.name}
+              </option>
             ))}
           </select>
         </div>
@@ -38,9 +53,7 @@ const TabPanel: React.FC<{ tabs: tabType[] }> = ({ tabs }) => {
           </nav>
         </div>
       </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 };
