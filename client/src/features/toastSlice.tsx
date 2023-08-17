@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { setUserData, getUserData, clearUserData } from "../utils/localStorage";
 
 export interface toastType {
   error: boolean;
@@ -23,5 +22,5 @@ export const toastSlice = createSlice({
     },
   },
 });
-export const { add } = toastSlice.actions;
+export const { add, remove } = toastSlice.actions;
 export default toastSlice.reducer;
