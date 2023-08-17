@@ -48,6 +48,9 @@ export const authSlice = createSlice({
     logout(state) {
       state.userData = null;
     },
+    clearError(state) {
+      state.error = null;
+    },
   },
   extraReducers: {
     //login request states
@@ -58,6 +61,7 @@ export const authSlice = createSlice({
     [login.fulfilled as any]: (state, action) => {
       state.isLoading = false;
       state.userData = action.payload.result;
+      state.error = null;
       setUserData(action.payload.result);
     },
     [login.rejected as any]: (state, action) => {
@@ -68,10 +72,12 @@ export const authSlice = createSlice({
     //register request states
     [register.pending as any]: (state) => {
       state.isLoading = true;
+      state.error = null;
     },
     [register.fulfilled as any]: (state, action) => {
       state.isLoading = false;
       state.userData = action.payload.result;
+      state.error = null;
       setUserData(action.payload.result);
     },
     [register.rejected as any]: (state, action) => {
@@ -81,5 +87,5 @@ export const authSlice = createSlice({
     },
   },
 });
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

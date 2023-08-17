@@ -6,8 +6,8 @@ export interface toastType {
   id: string;
 }
 
-const initialState: { notifications: toastType[] } = {
-  notifications: [],
+const initialState: { toasts: toastType[] } = {
+  toasts: [],
 };
 
 export const toastSlice = createSlice({
@@ -15,12 +15,13 @@ export const toastSlice = createSlice({
   initialState,
   reducers: {
     add(state, action: PayloadAction<toastType>) {
-      state.notifications.unshift(action.payload);
+      state.toasts.unshift(action.payload);
     },
-    remove(state) {
-      state.notifications.pop();
+    remove(state, action) {
+      state.toasts = state.toasts.filter((t) => t.id !== action.payload.id);
     },
   },
 });
+
 export const { add, remove } = toastSlice.actions;
 export default toastSlice.reducer;
